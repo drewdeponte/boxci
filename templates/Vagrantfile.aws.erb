@@ -1,0 +1,27 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+Vagrant.configure("2") do |config|
+  config.vm.box = "dummy"
+
+  config.vm.provider :aws do |aws|
+    aws.access_key_id = "<%= @config["aws"]["access_key"] %>"
+    aws.secret_access_key = "<%= @config["aws"]["secret_access_key"] %>"
+    aws.keypair_name = "<%= @config["aws"]["keypair_name"] %>"
+    aws.ssh_private_key_path = "<%= @config["aws"]["ssh_private_key_path"] %>"
+
+    aws.ami = "ami-7747d01e"
+    aws.ssh_username = "ubuntu"
+  end
+
+  config.vm.provision :puppet, :options => "--verbose --debug" do |puppet|
+    puppet.facter = { 
+      "role" => "ci", 
+      "operationsystem" => "debian",
+      "vagrant_user" => "ubuntu", 
+      "vagrant_home" => "/home/ubuntu"
+    }
+    puppet.module_path = "<%= @config['puppet_path'] %>/modules"
+    puppet.manifests_path = "<%= @config['puppet_path'] %>/manifests"
+    puppet.manifest_file = "<%= @config['project_manifest'] %>"
+  end
+end

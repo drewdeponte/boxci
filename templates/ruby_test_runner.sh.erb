@@ -1,0 +1,26 @@
+#!/bin/bash --login
+
+export RAILS_ENV=test
+export PROJECT_DIR="/tmp/project"
+export CI_REPORTS="/tmp/reports"
+
+ssh -oStrictHostKeyChecking=no github.com
+mkdir $PROJECT_DIR
+cd $PROJECT_DIR 
+tar xf /tmp/project.tar
+rvm autolibs packages
+sudo /usr/local/rvm/bin/rvm requirements
+rvm install --create $(cat .ruby-version)
+rvm use $(cat .ruby-version)
+gem install bundler 
+if ! grep -q ci_reporter Gemfile; then
+  echo "gem 'ci_reporter'" >> Gemfile
+fi
+bundle install --without assets
+<%= @config["project_setup"] %>
+
+T=$(date +%s)
+cd /tmp/project 
+<%= @config["tests_to_run"] %>
+T2=$(date +%s)
+find . -mmin $(((T-T2)/60-1)) -name "*.xml" -exec mv {} $CI_REPORTS \; 
