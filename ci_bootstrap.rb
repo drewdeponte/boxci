@@ -23,7 +23,8 @@ class CiBoostrap
 
     Dir.chdir(@workspace)
     `git checkout #{@rev}`
-    `git submodule update --init`
+    `git submodule init`
+    `git submodule update`
     `tar cf #{File.join(@project_folder, "project.tar")} --exclude .git --exclude "*.log" .`
     Dir.chdir(@root_path)
     write_vagrant_file
