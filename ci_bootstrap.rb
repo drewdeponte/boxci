@@ -22,18 +22,24 @@ class CiBoostrap
     `mkdir #{@project_folder}`
 
     Dir.chdir(@workspace)
-    `git archive --format tar #{@rev} > #{File.join(@project_folder, "project.tar")}`
+    `git checkout #{@rev}`
+    `git submodule update --init`
+    `tar cf #{File.join(@project_folder, "project.tar")} --exclude .git --exclude "*.log" .`
     Dir.chdir(@root_path)
     write_vagrant_file
     STDOUT.sync = true
 
     Dir.chdir @project_folder do
-      install_aws_plugin unless aws_plugin?
+      if @config["provider"] == "aws"
+        install_aws_plugin
+      else
+        install_openstack_plugin
+      end
       install_dummy_box unless dummy_box?
       puts `vagrant up --no-provision --provider #{@config["provider"]}`
       `vagrant ssh-config > ssh-config.local`
       Net::SSH.start("default", "ubuntu", {:config => "ssh-config.local"}) do |ssh|
-        puppet = ssh.exec! "bash -l -c which -s puppet"
+        puppet = ssh.exec! "which puppet"
         unless puppet
           puts "Installing puppet"
           ssh.exec! "sudo apt-get --yes update && sudo apt-get --yes install puppet"
@@ -45,38 +51,56 @@ class CiBoostrap
         ssh.scp.upload! "test_runner.sh", "/tmp/test_runner.sh"
         puts ssh.exec! "chmod a+x /tmp/test_runner.sh"
         puts "Running tests"
-        puts ssh.exec! "bash -l -c /tmp/test_runner.sh"
+        puts ssh.exec! "/tmp/test_runner.sh"
         FileUtils.mkdir_p(@report_location)
-        FileUtils.rm("#{@report_location}/*.xml")
-        ssh.scp.download! "/tmp/reports/*.xml", @report_location
+        Dir["#{@report_location}/*.xml"].each { |file| FileUtils.rm(file) }
+        ssh.scp.download! "/tmp/reports", @workspace, :recursive => true
       end
     end
+    cleanup
   end
 
   def load_config
     config_file = File.join(@workspace, ".ci_bootstrap.yml") 
     @config = YAML::load_file(config_file)
     @provider_config = YAML::load_file(File.join(root_path, "provider_config.yml"))
-    @config[@config["provider"]] = @provider_config[@config["provider"]] 
+    @config[@config["provider"]] = @provider_config[@config["provider"]].merge(@config[@config["provider"]] || {})
     @config['puppet_path'] = File.join(@workspace, @config['puppet_folder'])
   end
 
   def cleanup
+    Dir.chdir @project_folder
     `vagrant destroy`
     Dir.chdir(@root_path)
     FileUtils.rm_rf(@project_folder)
   end
 
   def vagrant?
-    system("which -s vagrant")
+    system("which vagrant")
+  end
+
+  def has_plugin?(plugin)
+    system("vagrant plugin list | grep -q #{plugin}")
   end
 
   def aws_plugin?
-    system("vagrant plugin list | grep -q vagrant-aws")
+    has_plugin?("vagrant-aws")
+  end
+
+  def openstack_plugin?
+    has_plugin?("vagrant-openstack-plugin")
+  end
+
+  def install_plugin(plugin)
+    `vagrant plugin install #{plugin}`
   end
 
   def install_aws_plugin
-    `vagrant plugin install vagrant-aws`
+    install_plugin("vagrant-aws")
+  end
+
+  def install_openstack_plugin
+    install_plugin("vagrant-openstack-plugin")
   end
 
   def dummy_box?
@@ -101,7 +125,7 @@ class CiBoostrap
 end
 
 @workspace = ARGV[0]
-@rev = ARGV[1]
+@rev = ARGV[1] || "HEAD"
 @bootstrap = CiBoostrap.new(@workspace, @rev)
 @bootstrap.run
 
