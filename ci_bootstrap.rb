@@ -2,6 +2,7 @@
 
 require 'rubygems'
 require 'yaml'
+require 'erb'
 require 'fileutils'
 require 'net/ssh'
 require 'net/scp'
