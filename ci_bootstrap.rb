@@ -59,6 +59,7 @@ class CiBoostrap
         ssh.scp.download! "/tmp/reports", @workspace, :recursive => true
       end
     end
+  ensure
     cleanup
   end
 
