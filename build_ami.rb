@@ -2,112 +2,87 @@
 
 require 'rubygems'
 require 'yaml'
-require 'erb'
 require 'fileutils'
 require 'net/ssh'
 require 'net/scp'
 
-class CiBoostrap
-  attr_accessor :root_path, :workspace, :rev, :config
+class AMIBuilder
+  attr_accessor :root_path, :workspace, :name, :config
 
-  def initialize(workspace, rev)
+  def initialize(workspace, name)
     @workspace = workspace
-    @rev = rev
+    @name = name
     @root_path = File.dirname(File.expand_path(__FILE__))
     load_config
   end
 
   def run
-    @report_location = File.join(@workspace, "reports")
-    @project_folder = File.join(root_path, "#{@config["project_name"]}#{@rev}")
+    @project_folder = File.join(root_path, "#{@config["project_name"]}_ami_builder")
     `mkdir #{@project_folder}`
-
     Dir.chdir(@workspace)
-    # `git checkout #{@rev}`
-    `git submodule init`
-    `git submodule update`
-    `tar cf #{File.join(@project_folder, "project.tar")} --exclude .git --exclude "*.log" .`
+    `git archive --format tar HEAD > #{File.join(@project_folder, "project.tar")}`
     Dir.chdir(@root_path)
     write_vagrant_file
     STDOUT.sync = true
 
     Dir.chdir @project_folder do
-      if @config["provider"] == "aws"
-        install_aws_plugin
-      else
-        install_openstack_plugin
-      end
+      install_aws_plugin unless aws_plugin?
       install_dummy_box unless dummy_box?
       puts `vagrant up --no-provision --provider #{@config["provider"]}`
       `vagrant ssh-config > ssh-config.local`
       Net::SSH.start("default", "ubuntu", {:config => "ssh-config.local"}) do |ssh|
-        puppet = ssh.exec! "which puppet"
-        unless puppet
-          puts "Installing puppet"
-          ssh.exec! "sudo apt-get --yes update && sudo apt-get --yes install puppet"
-        end
-      end
-
-      puts `vagrant provision`
-
-      Net::SSH.start("default", "ubuntu", {:config => "ssh-config.local"}) do |ssh|
+        ssh.exec! "sudo sed -i.dist 's,universe$,universe multiverse,' /etc/apt/sources.list"
+        ssh.exec! "sudo apt-get --yes update"
+        puts "Installing puppet"
+        ssh.exec! "sudo apt-get --yes install puppet"
+        puts `vagrant provision`
+        ssh.exec! "sudo apt-get --yes install ec2-ami-tools ec2-api-tools"
+        ssh.exec! "mkdir /tmp/certs"
+        ssh.scp.upload! @provider_config["aws"]["private_keyfile"], "/tmp/certs/keyfile.pem"
+        ssh.scp.upload! @provider_config["aws"]["certificate_file"], "/tmp/certs/cert.pem"
+        @ami_commands = <<-EOF
+        echo Bundling Volume
+        sudo ec2-bundle-vol -k /tmp/certs/keyfile.pem -c /tmp/certs/cert.pem -u #{@provider_config["aws"]["user_id"]} -e /tmp/certs -r x86_64
+        echo Uploading Bundle
+        sudo ec2-upload-bundle -b #{@provider_config["aws"]["ami_bucket"]} -m /tmp/image.manifest.xml -a #{@provider_config["aws"]["access_key"]} -s #{@provider_config["aws"]["secret_access_key"]}
+        echo Registering Bundle
+        sudo ec2-register -K /tmp/certs/keyfile.pem -C /tmp/certs/cert.pem #{@provider_config["aws"]["ami_bucket"]}/image.manifest.xml -n #{@name} 
+        EOF
+        File.write("ami_commands.sh", @ami_commands)
+        ssh.scp.upload! "ami_commands.sh", "/tmp/certs/ami_commands.sh"
         ssh.scp.upload! "project.tar", "/tmp/project.tar"
         write_test_runner
         puts "Uploading test runner"
         ssh.scp.upload! "test_runner.sh", "/tmp/test_runner.sh"
         puts ssh.exec! "chmod a+x /tmp/test_runner.sh"
-        puts "Running tests"
-        puts ssh.exec! "/tmp/test_runner.sh"
-        FileUtils.mkdir_p(@report_location)
-        Dir["#{@report_location}/*.xml"].each { |file| FileUtils.rm(file) }
-        ssh.scp.download! "/tmp/reports", @workspace, :recursive => true
       end
     end
-  ensure
-    cleanup
   end
 
   def load_config
     config_file = File.join(@workspace, ".ci_bootstrap.yml") 
     @config = YAML::load_file(config_file)
     @provider_config = YAML::load_file(File.join(root_path, "provider_config.yml"))
-    @config[@config["provider"]] = @provider_config[@config["provider"]].merge(@config[@config["provider"]] || {})
+    @config[@config["provider"]] = @provider_config[@config["provider"]] 
     @config['puppet_path'] = File.join(@workspace, @config['puppet_folder'])
   end
 
   def cleanup
-    Dir.chdir @project_folder
     `vagrant destroy`
     Dir.chdir(@root_path)
     FileUtils.rm_rf(@project_folder)
   end
 
   def vagrant?
-    system("which vagrant")
-  end
-
-  def has_plugin?(plugin)
-    system("vagrant plugin list | grep -q #{plugin}")
+    system("which -s vagrant")
   end
 
   def aws_plugin?
-    has_plugin?("vagrant-aws")
-  end
-
-  def openstack_plugin?
-    has_plugin?("vagrant-openstack-plugin")
-  end
-
-  def install_plugin(plugin)
-    `vagrant plugin install #{plugin}`
+    system("vagrant plugin list | grep -q vagrant-aws")
   end
 
   def install_aws_plugin
-    install_plugin("vagrant-aws")
-  end
-
-  def install_openstack_plugin
-    install_plugin("vagrant-openstack-plugin")
+    `vagrant plugin install vagrant-aws`
   end
 
   def dummy_box?
@@ -123,7 +98,7 @@ class CiBoostrap
     template = ERB.new(File.read(template_file), 0, "<>")
     File.write(File.join(@project_folder, "Vagrantfile"), template.result(binding))
   end
-  
+
   def write_test_runner
     template_file = File.join(@root_path, "templates", "#{@config['type']}_test_runner.sh.erb")
     template = ERB.new(File.read(template_file), 0, "<>")
@@ -132,9 +107,9 @@ class CiBoostrap
 end
 
 @workspace = ARGV[0]
-@rev = ARGV[1] || "HEAD"
-@bootstrap = CiBoostrap.new(@workspace, @rev)
-@bootstrap.run
+@name = ARGV[1]
+@builder = AMIBuilder.new(@workspace, @name)
+@builder.run
 
 
 
