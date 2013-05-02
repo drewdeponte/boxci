@@ -23,7 +23,7 @@ class CiBoostrap
     `mkdir #{@project_folder}`
 
     Dir.chdir(@workspace)
-    # `git checkout #{@rev}`
+    `git checkout #{@rev}`
     `git submodule init`
     `git submodule update`
     `tar cf #{File.join(@project_folder, "project.tar")} --exclude .git --exclude "*.log" .`
