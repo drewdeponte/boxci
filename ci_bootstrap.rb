@@ -34,10 +34,11 @@ class CiBoostrap
     Dir.chdir @project_folder do
       if @config["provider"] == "aws"
         install_aws_plugin
+        install_aws_dummy_box unless dummy_aws_box?
       else
         install_openstack_plugin
+        install_openstack_dummy_box unless dummy_openstack_box?
       end
-      install_dummy_box unless dummy_box?
       puts `vagrant up --no-provision --provider #{@config["provider"]}`
       `vagrant ssh-config > ssh-config.local`
       Net::SSH.start("default", "ubuntu", {:config => "ssh-config.local"}) do |ssh|
@@ -110,12 +111,24 @@ class CiBoostrap
     install_plugin("vagrant-openstack-plugin")
   end
 
-  def dummy_box?
-    system("vagrant box list | grep -q dummy")
+  def dummy_box?(type)
+    system("vagrant box list | grep -q dummy (#{type})")
   end
 
-  def install_dummy_box
+  def dummy_aws_box?
+    dummy_box?("aws")
+  end
+
+  def dummy_openstack_box?
+    dummy_box?("openstack")
+  end
+
+  def install_aws_dummy_box
     `vagrant box add dummy https://github.com/mitchellh/vagrant-aws/raw/master/dummy.box`
+  end
+
+  def install_openstack_dummy_box
+    `vagrant box add dummy https://github.com/cloudbau/vagrant-openstack-plugin/raw/master/dummy.box` 
   end
 
   def write_vagrant_file
