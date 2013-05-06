@@ -112,7 +112,7 @@ class CiBoostrap
   end
 
   def dummy_box?(type)
-    system("vagrant box list | grep -q dummy (#{type})")
+    system("vagrant box list | grep -q \"dummy (#{type})\"")
   end
 
   def dummy_aws_box?
