@@ -8,17 +8,17 @@ require 'net/ssh'
 require 'net/scp'
 
 class CiBoostrap
-  attr_accessor :root_path, :workspace, :rev, :config
+  attr_accessor :root_path, :workspace, :rev, :config, :report_location
 
   def initialize(workspace, rev)
     @workspace = workspace
     @rev = rev
     @root_path = File.dirname(File.expand_path(__FILE__))
+    @report_location = File.join(@workspace, "reports")
     load_config
   end
 
   def run
-    @report_location = File.join(@workspace, "reports")
     @project_folder = File.join(root_path, "#{@config["project_name"]}#{@rev}")
     `mkdir #{@project_folder}`
 
@@ -39,9 +39,12 @@ class CiBoostrap
         install_openstack_plugin
         install_openstack_dummy_box unless dummy_openstack_box?
       end
-      puts `vagrant up --no-provision --provider #{@config["provider"]}`
+      run_cmd_and_show("vagrant up --no-provision --provider #{@config["provider"]}")
       `vagrant ssh-config > ssh-config.local`
       Net::SSH.start("default", "ubuntu", {:config => "ssh-config.local"}) do |ssh|
+        ssh.exec!  "mkdir /vagrant/#{@config['project_name']}"
+        ssh.exec!  "tar xf /vagrant/project.tar -C /vagrant/#{@config['project_name']}"
+        ssh.exec!  "cp /vagrant/#{@config["project_name"]}/.ruby-version /vagrant"
         puppet = ssh.exec! "which puppet"
         unless puppet
           puts "Installing puppet"
@@ -49,19 +52,22 @@ class CiBoostrap
         end
       end
 
-      puts `vagrant provision`
+      run_cmd_and_show("vagrant provision")
 
       Net::SSH.start("default", "ubuntu", {:config => "ssh-config.local"}) do |ssh|
-        ssh.scp.upload! "project.tar", "/tmp/project.tar"
+        report_exts = @config['report_file_ext'] || ['xml']
+        report_exts.each{ |ext|
+          ssh.exec!  "mkdir -p /vagrant/#{@config['project_name']}/reports/#{ext}"
+        }
         write_test_runner
         puts "Uploading test runner"
-        ssh.scp.upload! "test_runner.sh", "/tmp/test_runner.sh"
-        puts ssh.exec! "chmod a+x /tmp/test_runner.sh"
+        ssh.scp.upload! "test_runner.sh", "/vagrant/test_runner.sh"
+        puts ssh.exec! "chmod a+x /vagrant/test_runner.sh"
         puts "Running tests"
-        puts ssh.exec! "/tmp/test_runner.sh"
+        puts ssh.exec! "/vagrant/test_runner.sh"
         FileUtils.mkdir_p(@report_location)
-        Dir["#{@report_location}/*.xml"].each { |file| FileUtils.rm(file) }
-        ssh.scp.download! "/tmp/reports", @workspace, :recursive => true
+        Dir["#{@report_location}/*.*"].each { |file| FileUtils.rm(file) }
+        ssh.scp.download! "/vagrant/#{config['project_name']}/reports", @workspace, :recursive => true
       end
     end
   ensure
@@ -141,6 +147,10 @@ class CiBoostrap
     template_file = File.join(@root_path, "templates", "#{@config['type']}_test_runner.sh.erb")
     template = ERB.new(File.read(template_file), 0, "<>")
     File.write(File.join(@project_folder, "test_runner.sh"), template.result(binding), "perm" => 0755)
+  end
+
+  def run_cmd_and_show(cmd)
+    IO.popen(cmd) { |f| f.each { |l| puts l } }
   end
 end
 
