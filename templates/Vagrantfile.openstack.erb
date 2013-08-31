@@ -21,7 +21,7 @@ Vagrant.configure("2") do |config|
       "role" => "ci", 
       "operationsystem" => "debian",
       "vagrant_user" => "ubuntu", 
-      "vagrant_home" => "/home/ubuntu"
+      "vagrant_home" => "/home/ubuntu"<%= @config['puppet_facters'] %>
     }
     puppet.module_path = "<%= @config['puppet_path'] %>/modules"
     puppet.manifests_path = "<%= @config['puppet_path'] %>/manifests"

@@ -26,7 +26,7 @@ class CiBoostrap
     `git checkout #{@rev}`
     `git submodule init`
     `git submodule update`
-    `tar cf #{File.join(@project_folder, "project.tar")} --exclude .git --exclude "*.log" .`
+    `tar cf #{File.join(@project_folder, "project.tar")} --exclude .git --exclude "*.log" --exclude node_modules .`
     Dir.chdir(@root_path)
     write_vagrant_file
     STDOUT.sync = true
