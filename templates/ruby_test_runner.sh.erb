@@ -1,13 +1,13 @@
 #!/bin/bash --login
 
 export RAILS_ENV=test
-export PROJECT_DIR="/tmp/project"
-export CI_REPORTS="/tmp/reports"
+export PROJECT_DIR="/vagrant/<%= @config['project_name'] %>"
+export CI_REPORTS="/vagrant/<%= @config['project_name'] %>/reports"
 
 ssh -oStrictHostKeyChecking=no github.com
 mkdir $PROJECT_DIR
 cd $PROJECT_DIR 
-tar xf /tmp/project.tar
+#tar xf /tmp/project.tar
 rvm autolibs packages
 sudo /usr/local/rvm/bin/rvm requirements
 rvm install --create $(cat .ruby-version)
@@ -20,7 +20,8 @@ bundle install --without assets
 <%= @config["project_setup"] %>
 
 T=$(date +%s)
-cd /tmp/project 
+#cd /tmp/project 
+cd $PROJECT_DIR
 <%= @config["tests_to_run"] %>
 T2=$(date +%s)
 find . -mmin $(((T-T2)/60-1)) -name "*.xml" -exec mv {} $CI_REPORTS \; 
