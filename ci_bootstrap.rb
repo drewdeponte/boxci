@@ -27,6 +27,9 @@ class CiBoostrap
     `git submodule init`
     `git submodule update`
     `tar cf #{File.join(@project_folder, "project.tar")} --exclude .git --exclude "*.log" --exclude node_modules .`
+    if (File.exists?('.ruby-version'))
+      File.cp('.ruby-version',@workspace)
+    end
     Dir.chdir(@root_path)
     write_vagrant_file
     STDOUT.sync = true
