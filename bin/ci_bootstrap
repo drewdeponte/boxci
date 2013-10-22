@@ -1,11 +1,15 @@
 #!/usr/bin/env ruby
 
+$LOAD_PATH.unshift ::File.expand_path(::File.dirname(__FILE__) + '/../lib')
+
 require 'rubygems'
 require 'yaml'
 require 'erb'
 require 'fileutils'
 require 'net/ssh'
 require 'net/scp'
+
+require 'ci_bootstrap/version'
 
 class CiBoostrap
   attr_accessor :root_path, :workspace, :rev, :config, :report_location
