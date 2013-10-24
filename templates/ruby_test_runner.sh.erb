@@ -7,7 +7,7 @@ export CI_REPORTS="/vagrant/<%= @config['project_name'] %>/reports"
 ssh -oStrictHostKeyChecking=no github.com
 mkdir $PROJECT_DIR
 cd $PROJECT_DIR 
-#tar xf /tmp/project.tar
+tar xf ../project.tar
 rvm autolibs packages
 sudo /usr/local/rvm/bin/rvm requirements
 rvm install --create $(cat .ruby-version)

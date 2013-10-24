@@ -4,8 +4,9 @@ export RAILS_ENV=test
 export PROJECT_DIR="/vagrant/<%= @config['project_name'] %>"
 export CI_REPORTS="/vagrant/<%= @config['project_name'] %>/reports"
 
-sudo ssh -oStrictHostKeyChecking=no github.com
+ssh -oStrictHostKeyChecking=no github.com
 cd $PROJECT_DIR 
+tar xf ../project.tar
 pwd
 echo "running setup from ci_bootstrap.yml"
 #<%= @config["project_setup"] %>

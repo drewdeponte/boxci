@@ -39,7 +39,7 @@ class CiBoostrap
         install_openstack_plugin
         install_openstack_dummy_box unless dummy_openstack_box?
       end
-      run_cmd_and_show("vagrant up --no-provision --provider #{@config["provider"]}")
+      run_cmd_and_show("cd #{@project_folder} && vagrant up --no-provision --provider #{@config["provider"]}")
       `vagrant ssh-config > ssh-config.local`
       Net::SSH.start("default", "ubuntu", {:config => "ssh-config.local"}) do |ssh|
         ssh.exec!  "mkdir /vagrant/#{@config['project_name']}"
@@ -52,7 +52,7 @@ class CiBoostrap
         end
       end
 
-      run_cmd_and_show("vagrant provision")
+      run_cmd_and_show("cd #{@project_folder} && vagrant provision")
 
       Net::SSH.start("default", "ubuntu", {:config => "ssh-config.local"}) do |ssh|
         report_exts = @config['report_file_ext'] || ['xml']
