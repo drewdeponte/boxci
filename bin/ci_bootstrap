@@ -11,7 +11,7 @@ require 'net/scp'
 
 require 'ci_bootstrap/version'
 
-class CiBoostrap
+class CiBootstrap
   attr_accessor :root_path, :workspace, :rev, :config, :report_location
 
   def initialize(workspace, rev)
@@ -160,7 +160,7 @@ end
 
 @workspace = ARGV[0]
 @rev = ARGV[1] || "HEAD"
-@bootstrap = CiBoostrap.new(@workspace, @rev)
+@bootstrap = CiBootstrap.new(@workspace, @rev)
 @bootstrap.run
 
 
