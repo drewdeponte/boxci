@@ -18,6 +18,16 @@ Or install it yourself as:
 
 ## Usage and config
 
+    $ ci_bootstrap <ci workspace path> <repository revision>
+
+An example of this with bamboo might look as follows:
+
+    $ ci_bootstrap ${bamboo.build.working.directory} ${bamboo.repository.revision.number}
+
+However, if you want to test it manually you can always run it as follows:
+
+    $ ci_bootstrap <path to local git repo>
+
 NOTE: this will change once the gem has been created
   
 1. ssh to the build agent machine
