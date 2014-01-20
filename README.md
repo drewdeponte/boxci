@@ -45,11 +45,14 @@ NOTE: this will change once the gem has been created
 1. install bundler `gem install bundler`
 1. install gems needed for ci_bootstrap `bundle install`
 1. create /opt/ci_bootstrap/provider_config.yml
-     openstack:
-       username: your.name                                                                                                             
-       api_key: PassphrasesCanBeLongAsWellAsSh0rt
-       private_key_path: "~/.ssh/id_dsa"
-       key_pair: yourname
+
+```text
+openstack:
+  username: your.name                                                                                                             
+  api_key: PassphrasesCanBeLongAsWellAsSh0rt
+  private_key_path: "~/.ssh/id_dsa"
+  key_pair: yourname
+```
 
 ## Contributing
 
@@ -104,3 +107,8 @@ This is a rewrite of the current process that is being used on Jenkins and shoul
 3. Configure Bamboo so it will run vagrant based jobs
 
 Let me know if you have any questions or suggestions.
+
+## External Dependencies
+
+- Vagrant
+- git
