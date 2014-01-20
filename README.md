@@ -45,11 +45,14 @@ NOTE: this will change once the gem has been created
 1. install bundler `gem install bundler`
 1. install gems needed for ci_bootstrap `bundle install`
 1. create /opt/ci_bootstrap/provider_config.yml
-     openstack:
-       username: your.name                                                                                                             
-       api_key: PassphrasesCanBeLongAsWellAsSh0rt
-       private_key_path: "~/.ssh/id_dsa"
-       key_pair: yourname
+
+```text
+openstack:
+  username: your.name                                                                                                             
+  api_key: PassphrasesCanBeLongAsWellAsSh0rt
+  private_key_path: "~/.ssh/id_dsa"
+  key_pair: yourname
+```
 
 ## Contributing
 
