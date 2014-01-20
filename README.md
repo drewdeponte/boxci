@@ -107,3 +107,8 @@ This is a rewrite of the current process that is being used on Jenkins and shoul
 3. Configure Bamboo so it will run vagrant based jobs
 
 Let me know if you have any questions or suggestions.
+
+## External Dependencies
+
+- Vagrant
+- git
