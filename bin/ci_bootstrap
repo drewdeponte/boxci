@@ -24,8 +24,8 @@ module CiBootstrap
     end
 
     def run
-      # @project_folder = ~/.ci_bootstrap/#{project_name}#{rev}
-      @project_folder = File.join(File.expand_path(ENV['HOME']), '.ci_bootstrap', "#{@config['project_name']}#{@rev}")
+      # @project_folder = ~/.ci_bootstrap/#{project_name}-#{rev}
+      @project_folder = File.join(File.expand_path(ENV['HOME']), '.ci_bootstrap', "#{@config['project_name']}-#{@rev}")
       `mkdir #{@project_folder}`
 
       Dir.chdir(@workspace)
