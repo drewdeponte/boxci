@@ -1,6 +1,8 @@
 # Shanty
 
-TODO: Write a gem description
+Shanty is a project focused on providing standards around the use of Vagrant
+to make managing Vagrant based development environments and continuous
+integration environments easy.
 
 ## Installation
 
