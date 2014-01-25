@@ -1,8 +1,9 @@
 # Shanty
 
-Shanty is a project focused on providing standards around the use of Vagrant
-to make managing Vagrant based development environments and continuous
-integration environments easy.
+Shanty is a project focused on providing standards around the use of
+[Vagrant](http://www.vagrantup.com/) to make managing
+[Vagrant](http://www.vagrantup.com/) based development environments and
+continuous integration environments easy.
 
 ## Installation
 
@@ -20,7 +21,29 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+### init
+
+Initialize the specified directory as a shanty. 
+
+    $ shanty init .
+
+The above command creates the initial shanty skeleton in a project if it is
+not already a shanty. This will create the following files in the specified
+directory: `Vagrantfile`, `puppet/manifests`, `puppet/manifests/main.pp`,
+`puppet/modules`, `puppet/modules/.gitkeep`, `.shanty.yml`
+
+### generate provider_config
+
+Generate the example `~/.shanty_cloud_provider_config.yml` with the following command.
+
+    $ shanty generate provider_config
+
+### test
+
+Bring up the shanty with your cloud provider, run the tests, and shutdown the
+cloud node.
+
+    $ shanty test
 
 ## Contributing
 
