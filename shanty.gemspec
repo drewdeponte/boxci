@@ -8,8 +8,8 @@ Gem::Specification.new do |spec|
   spec.version       = Shanty::VERSION
   spec.authors       = ["Andrew De Ponte"]
   spec.email         = ["cyphactor@gmail.com"]
-  spec.summary       = %q{TODO: Write a short summary. Required.}
-  spec.description   = %q{TODO: Write a longer description. Optional.}
+  spec.summary       = %q{Tool simplifying Vagrant based development & continuous integration environments.}
+  spec.description   = %q{Shanty is focused on defining standards and building tooling around using Vagrant for development & continuous integration environments to make using them as easy as possible.}
   spec.homepage      = ""
   spec.license       = "MIT"
 
