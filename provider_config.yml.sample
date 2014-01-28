@@ -1,0 +1,11 @@
+openstack:
+  username: rl.user 
+  api_key: rl.password 
+  private_key_path: "~/.ssh/id_rsa"
+  key_pair: rl.keypair 
+aws:
+  access_key: abcd1234
+  secret_access_key: abcd1234
+  keypair_name: rl_user 
+  ssh_private_key_path: /Users/rl.user/.ec2/key
+  ami: ami-7747d01e
