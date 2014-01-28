@@ -1,5 +1,32 @@
 #!/usr/bin/env ruby
+require "thor"
 
 $LOAD_PATH.unshift ::File.expand_path(::File.dirname(__FILE__) + '/../lib')
 
-puts "Welcome to shanty."
+class ShantyCommands < Thor
+  require "shanty"
+
+  desc "init", "Initializes Shanty in the present working directory"
+  def init
+    Shanty::Initializer.do_init
+  end
+
+  desc "build", "Spins up a VM in the RLPC using the project's puppet manifest"
+  method_options %w(force -f) => :boolean
+  def build
+    if options.force?
+      Shanty::VMBuilder.build!
+    else
+      Shanty::VMBuilder.build
+    end
+  end
+
+  desc "ssh", "Creates an SSH tunnel into the current VM"
+  def ssh
+    puts "Logging into your Shanty VM..."
+    sleep 1
+    puts "No VM found! Create one with 'shanty build'"
+  end
+end
+
+ShantyCommands.start
