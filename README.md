@@ -18,6 +18,8 @@ Or install it yourself as:
 
 ## Usage and config
 
+    $ ci_bootstrap <local repository to deploy> <repository revision>
+
     $ ci_bootstrap <ci workspace path> <repository revision>
 
 An example of this with bamboo might look as follows:
