@@ -6,8 +6,8 @@ require 'shanty/version'
 Gem::Specification.new do |spec|
   spec.name          = "shanty"
   spec.version       = Shanty::VERSION
-  spec.authors       = ["Andrew De Ponte"]
-  spec.email         = ["cyphactor@gmail.com"]
+  spec.authors       = ["Andrew De Ponte", "Brian Miller", "Russell Cloak"]
+  spec.email         = ["cyphactor@gmail.com", "brian.miller@reachlocal.com", "russell.cloak@reachlocal.com"]
   spec.summary       = %q{Tool simplifying Vagrant based development & continuous integration environments.}
   spec.description   = %q{Shanty is focused on defining standards and building tooling around using Vagrant for development & continuous integration environments to make using them as easy as possible.}
   spec.homepage      = ""
