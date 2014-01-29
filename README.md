@@ -19,6 +19,46 @@ Or install it yourself as:
 
     $ gem install shanty
 
+### First Run
+
+All commands check for dependencies at beginning of launch and short circuit
+with helpful message.
+
+Check for cloud_provider_config every run and notify if is missing with
+helpful message.
+
+
+    $ gem install shanty
+
+    $ cd project_dir
+    $ shanty init
+
+    Hey you don't have you clouder provider config please generate the example
+    and populate it with proper values and then re-run whatever command was
+    halted.
+    $ shanty generate cloud_provider_config
+
+    $ cd project_dir
+    $ shanty init
+
+    Show which files were generate and say finished. Note: Files should have
+    useful comments inside of them for things users would likely want to
+    change.
+
+### Running Tests
+
+    $ cd project_dir
+    $ shanty test
+
+### Running Dev Environment
+
+    $ cd project_dir
+    $ shanty build
+
+### Tear Down Dev Environment
+
+    $ shanty destroy
+
 ## Usage
 
 ### init
@@ -34,7 +74,7 @@ directory: `Vagrantfile`, `puppet/manifests`, `puppet/manifests/main.pp`,
 
 ### generate provider_config
 
-Generate the example `~/.shanty_cloud_provider_config.yml` with the following command.
+Generate the example `~/.shanty/cloud_provider_config.yml` with the following command.
 
     $ shanty generate provider_config
 
