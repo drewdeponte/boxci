@@ -1,6 +1,7 @@
 require "shanty/version"
 require "shanty/vm_builder"
+require "shanty/dependency_checker"
 
 module Shanty
-  # Your code goes here...
+  class MissingDependency < StandardError; end
 end
