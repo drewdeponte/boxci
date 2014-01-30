@@ -4,8 +4,18 @@ describe Shanty::DependencyChecker do
   subject { Shanty::DependencyChecker }
 
   describe ".verify_all" do
+    before do
+      allow(subject).to receive(:verify_vagrant)
+      allow(subject).to receive(:verify_cloud_provider_config)
+    end
+
     it "checks if vagrant is installed" do
       expect(subject).to receive(:verify_vagrant)
+      subject.verify_all
+    end
+
+    it "checks if the cloud_provider_config exists" do
+      expect(subject).to receive(:verify_cloud_provider_config)
       subject.verify_all
     end
 
@@ -64,13 +74,40 @@ describe Shanty::DependencyChecker do
       end
     end
 
-    context "when not vagrant is installed" do
+    context "when vagrant is not verified" do
       before do
         allow(subject).to receive(:system).and_return(false)
       end
 
       it "raises an error" do
         expect { subject.verify_vagrant }.to raise_error(Shanty::MissingDependency)
+      end
+    end
+  end
+
+  describe ".verify_cloud_provider_config" do
+    it "checks if the the '.cloud_provider_config' exists in the user's home dir" do
+      expect(subject).to receive(:system).with("[ -e ~/.cloud_provider_config ] > /dev/null").and_return(true)
+      subject.verify_cloud_provider_config
+    end
+
+    context "when the config is verified" do
+      before do
+        allow(subject).to receive(:system).and_return(true)
+      end
+
+      it "does not raise an error" do
+        expect { subject.verify_cloud_provider_config }.to_not raise_error
+      end
+    end
+
+    context "when the config is not verified" do
+      before do
+        allow(subject).to receive(:system).and_return(false)
+      end
+
+      it "raises an error" do
+        expect { subject.verify_cloud_provider_config }.to raise_error(Shanty::MissingDependency)
       end
     end
   end
