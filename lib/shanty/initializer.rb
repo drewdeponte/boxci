@@ -1,10 +1,8 @@
 module Shanty
   class Initializer
     class << self
-      def do_init
-        puts "Initializing Shanty in #{`pwd`}"
-        sleep 2
-        puts "Done!"
+      def init
+        Shanty::DependencyChecker.verify_all
       end
     end
   end

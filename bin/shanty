@@ -8,7 +8,7 @@ class ShantyCommands < Thor
 
   desc "init", "Initializes Shanty in the present working directory"
   def init
-    Shanty::Initializer.do_init
+    Shanty::Initializer.init
   end
 
   desc "build", "Spins up a VM in the RLPC using the project's puppet manifest"
