@@ -6,11 +6,14 @@ $LOAD_PATH.unshift ::File.expand_path(::File.dirname(__FILE__) + '/../lib')
 class ShantyCommands < Thor
   require "shanty"
 
+  include Thor::Actions
   desc "init", "Initializes Shanty in the present working directory"
   def init
     Shanty::Initializer.init
   end
 
+  desc "generate TEMPLATE", "Generates various Shanty files for you, for a given template"
+  subcommand "generate", Shanty::Generator
 
   # desc "build", "Spins up a VM in the RLPC using the project's puppet manifest"
   # method_options %w(force -f) => :boolean
