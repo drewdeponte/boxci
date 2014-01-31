@@ -7,6 +7,7 @@ describe Shanty::DependencyChecker do
     before do
       allow(subject).to receive(:verify_vagrant)
       allow(subject).to receive(:verify_cloud_provider_config)
+      allow(subject).to receive(:verify_repo_puppet_files)
     end
 
     it "gets the local repository path" do
@@ -21,6 +22,11 @@ describe Shanty::DependencyChecker do
 
     it "checks if the cloud_provider_config exists" do
       expect(subject).to receive(:verify_cloud_provider_config)
+      subject.verify_all
+    end
+
+    it "verifies the repository has the required puppet files" do
+      expect(subject).to receive(:verify_repo_puppet_files)
       subject.verify_all
     end
 
@@ -92,7 +98,8 @@ describe Shanty::DependencyChecker do
 
   describe ".verify_cloud_provider_config" do
     it "checks if the the '.cloud_provider_config' exists in the user's home dir" do
-      expect(File).to receive(:exists?).with("~/.shanty/cloud_provider_config.yml").and_return(true)
+      cloud_provider_file = File.join(File.expand_path(ENV["HOME"]), ".shanty", "cloud_provider_config.yml")
+      expect(File).to receive(:exists?).with(cloud_provider_file).and_return(true)
       subject.verify_cloud_provider_config
     end
 

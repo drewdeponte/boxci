@@ -8,6 +8,7 @@ module Shanty
         begin
           self.verify_vagrant
           self.verify_cloud_provider_config
+          self.verify_repo_puppet_files
           # List other dependencies here
         rescue Shanty::MissingDependency => e
           puts e.message
@@ -22,7 +23,7 @@ module Shanty
       end
 
       def verify_cloud_provider_config
-        if !File.exists?("~/.shanty/cloud_provider_config.yml")
+        if !File.exists?(File.join(File.expand_path(ENV["HOME"]), ".shanty", "cloud_provider_config.yml"))
           raise Shanty::MissingDependency, "It looks like you don't have the Cloud Provider Config setup. Generate an example with: \"shanty generate cloud_provider_config\""
         end
       end
