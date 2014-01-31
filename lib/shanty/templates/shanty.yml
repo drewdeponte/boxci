@@ -1,0 +1,3 @@
+provider: openstack
+project_name: Test Project 1
+puppet_folder: puppet

@@ -40,13 +40,18 @@ describe Shanty::Initializer do
       allow(subject).to receive(:directory)
     end
 
+    it "copies the shanty.yml from the templates to the project root" do
+      expect(subject).to receive(:copy_file).with("templates/shanty.yml", File.join(local_repository_path, "shanty.yml"))
+      subject.create_repo_root_files
+    end
+
     it "copies the Vagrantfile from the templates to the project root" do
-      expect(subject).to receive(:copy_file).with("templates/Vagrantfile", local_repository_path)
+      expect(subject).to receive(:copy_file).with("templates/Vagrantfile", File.join(local_repository_path, "Vagrantfile"))
       subject.create_repo_root_files
     end
 
     it "copies the puppet directory from the templates to the project root" do
-      expect(subject).to receive(:directory).with("templates/puppet", "#{local_repository_path}/puppet")
+      expect(subject).to receive(:directory).with("templates/puppet", File.join(local_repository_path, "puppet"))
       subject.create_repo_root_files
     end
   end

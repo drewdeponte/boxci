@@ -15,7 +15,7 @@ module Shanty
     desc "", "" #TODO: Figure out how to remove
     def init
       Shanty::DependencyChecker.verify_all
-      @local_repository_path = %x(pwd)
+      @local_repository_path = File.expand_path(%x(pwd)).strip
       create_home_directory_files
       create_repo_root_files
     end
@@ -26,8 +26,9 @@ module Shanty
       end
 
       def create_repo_root_files
-        copy_file "templates/Vagrantfile", @local_repository_path
-        directory "templates/puppet", File.join(@local_repository_path.strip, "puppet")
+        copy_file "templates/shanty.yml", File.join(@local_repository_path, "shanty.yml")
+        copy_file "templates/Vagrantfile", File.join(@local_repository_path, "Vagrantfile")
+        directory "templates/puppet", File.join(@local_repository_path, "puppet")
       end
     end
   end
