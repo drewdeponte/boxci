@@ -92,13 +92,13 @@ describe Shanty::DependencyChecker do
 
   describe ".verify_cloud_provider_config" do
     it "checks if the the '.cloud_provider_config' exists in the user's home dir" do
-      expect(subject).to receive(:system).with("[ -e ~/.shanty/cloud_provider_config.yml ] > /dev/null").and_return(true)
+      expect(File).to receive(:exists?).with("~/.shanty/cloud_provider_config.yml").and_return(true)
       subject.verify_cloud_provider_config
     end
 
     context "when the config is verified" do
       before do
-        allow(subject).to receive(:system).and_return(true)
+        expect(File).to receive(:exists?).and_return(true)
       end
 
       it "does not raise an error" do
@@ -108,7 +108,7 @@ describe Shanty::DependencyChecker do
 
     context "when the config is not verified" do
       before do
-        allow(subject).to receive(:system).and_return(false)
+        expect(File).to receive(:exists?).and_return(false)
       end
 
       it "raises an error" do

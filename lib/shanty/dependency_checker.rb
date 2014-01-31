@@ -22,7 +22,7 @@ module Shanty
       end
 
       def verify_cloud_provider_config
-        if !system("[ -e ~/.shanty/cloud_provider_config.yml ] > /dev/null")
+        if !File.exists?("~/.shanty/cloud_provider_config.yml")
           raise Shanty::MissingDependency, "It looks like you don't have the Cloud Provider Config setup. Generate an example with: \"shanty generate cloud_provider_config\""
         end
       end
