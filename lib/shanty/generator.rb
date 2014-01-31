@@ -10,9 +10,9 @@ module Shanty
       end
     end
 
-    desc "cloud_provider_config", "Generate a skeleton ~/.cloud_provider_config file"
+    desc "cloud_provider_config", "Generate a skeleton cloud_provider_config.yml file in your home directory"
     def cloud_provider_config
-      template "templates/cloud_provider_config", "~/.cloud_provider_config"
+      template "templates/shanty/cloud_provider_config.yml", "~/.shanty/cloud_provider_config.yml"
     end
   end
 end
