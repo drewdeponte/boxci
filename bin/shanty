@@ -12,11 +12,12 @@ class ShantyCommands < Thor
 
   desc "init", "Initializes Shanty in the present working directory"
   long_desc <<-LONGDESC
-    `shanty init` will create the following files:
+    `shanty init` will create the directory ~/.shanty, and add a cloud provider
+    config YAML example to that directory.
 
-    .shanty/
-    .shanty/config
-    .shanty/another_file
+    It will also create the following files/directories in the repository it is
+    called from within: Vagrantfile, puppet/manifests,
+    puppet/manifests/main.pp, puppet/modules, puppet/modules/, .shanty.yml
   LONGDESC
   def init
     invoke "shanty:initializer:init"
