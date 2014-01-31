@@ -14,7 +14,6 @@ module Shanty
 
     desc "", "" #TODO: Figure out how to remove
     def init
-      Shanty::DependencyChecker.verify_all
       @local_repository_path = File.expand_path(%x(pwd)).strip
       create_home_directory_files
       create_repo_root_files

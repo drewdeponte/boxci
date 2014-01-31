@@ -3,14 +3,8 @@ require "spec_helper"
 describe Shanty::Initializer do
   describe "#init" do
     before do
-      allow(Shanty::DependencyChecker).to receive(:verify_all)
       allow(subject).to receive(:create_home_directory_files)
       allow(subject).to receive(:create_repo_root_files)
-    end
-
-    it "verifies all required dependencies are installed" do
-      expect(Shanty::DependencyChecker).to receive(:verify_all)
-      subject.init
     end
 
     it "creates the home directory shanty files" do
