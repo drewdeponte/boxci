@@ -1,33 +1,34 @@
 require "thor"
 
 module Shanty
-  class Initializer < Thor
-    attr_accessor :local_repository_path
-
-    include Thor::Actions
-
-    class << self
-      def source_root
-        File.dirname(__FILE__)
-      end
-    end
-
-    desc "", "" #TODO: Figure out how to remove
-    def init
-      @local_repository_path = File.expand_path(%x(pwd)).strip
-      create_home_directory_files
-      create_repo_root_files
-    end
-
+  class Initializer < Shanty::Base
     no_commands do
-      def create_home_directory_files
-        directory "templates/shanty", "~/.shanty"
+      def init
+        create_cloud_provider_config
+        create_shanty_yml
       end
 
-      def create_repo_root_files
-        copy_file "templates/shanty.yml", File.join(@local_repository_path, "shanty.yml")
-        copy_file "templates/Vagrantfile", File.join(@local_repository_path, "Vagrantfile")
-        directory "templates/puppet", File.join(@local_repository_path, "puppet")
+      def create_cloud_provider_config
+        if File.exists?(File.join(ENV['HOME'], ".shanty", "cloud_provider_config.yml"))
+          say "Found cloud_provider_config.yml", :green
+        else
+          copy_file "templates/shanty/cloud_provider_config.yml", "~/.shanty/cloud_provider_config.yml"
+        end
+      end
+
+      def create_repo_puppet_directory
+        if File.directory?(File.join(local_repository_path, "puppet"))
+          say "Found puppet files", :green
+        else
+          directory "templates/puppet", File.join(local_repository_path, "puppet")
+        end
+      end
+
+      def create_shanty_yml
+        shanty_file = File.join(local_repository_path, "shanty.yml")
+        if !File.exists?(shanty_file)
+          copy_file "templates/shanty.yml", shanty_file
+        end
       end
     end
   end
