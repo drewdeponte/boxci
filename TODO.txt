@@ -1,0 +1,2 @@
+- Add output to explain next steps after "shanty init"
+- Use repo name as project name by default
