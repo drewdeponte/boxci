@@ -1,6 +1,6 @@
 openstack:
   username: rl.user
-  api_key: rl.password
+  password: rl.password
   private_key_path: "~/.ssh/id_rsa"
   key_pair: rl.keypair
 aws:
