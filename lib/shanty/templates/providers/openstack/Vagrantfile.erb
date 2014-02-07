@@ -18,7 +18,7 @@ Vagrant.configure("2") do |config|
     os.endpoint = "http://rlpc-control.dev.wh.reachlocal.com:5000/v2.0/tokens"
     os.keypair_name = "<%= @config['openstack']['key_pair'] %>"
     os.metadata = {}
-    # os.network = "DEV_APP"
+    os.network = "DEV_APP"
   end
 
   config.vm.provision :puppet do |puppet|
