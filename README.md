@@ -19,71 +19,91 @@ Or install it yourself as:
 
     $ gem install shanty
 
-### First Run
+## Setup
 
-All commands check for dependencies at beginning of launch and short circuit
-with helpful message.
-
-Check for cloud_provider_config every run and notify if is missing with
-helpful message.
-
-
-    $ gem install shanty
+Run the "init" command to create the basic Shanty files in your project's
+repository root. It will also create the `~/.shanty` directory if it doesn't
+already exist.
 
     $ cd project_dir
     $ shanty init
 
-    Hey you don't have you clouder provider config please generate the example
-    and populate it with proper values and then re-run whatever command was
-    halted.
+### cloud_provider_config.yml
+
+If you don't already have a `cloud_provider_config.yml` in your `~/.shanty`
+directory, you'll need to generate one with:
+
     $ shanty generate cloud_provider_config
 
-    $ cd project_dir
-    $ shanty init
+This will create an example `cloud_provider_config.yml` in the `~/.shanty`
+directory for you. Next, edit it using the following guide:
 
-    Show which files were generate and say finished. Note: Files should have
-    useful comments inside of them for things users would likely want to
-    change.
+#### Openstack
 
-### Running Tests
+For Openstack, the structure should be:
 
-    $ cd project_dir
-    $ shanty test
+    openstack:
+      username: rl.user
+      password: rl.password
+      private_key_path: "~/.ssh/id_rsa"
+      key_pair: rl.keypair
 
-### Running Dev Environment
+The individual fields are explained below.
 
-    $ cd project_dir
-    $ shanty build
+##### username
 
-### Tear Down Dev Environment
+This is your username for opensource. It is also sometimes referred to as the
+"tenant name".
 
-    $ shanty destroy
+##### password
+
+This is your password for interacting with opensource. If you've setup any of
+the command-line clients such as "Nova", this was set during your initial
+system setup. It is also sometimes referred to as the "api_key".
+
+##### private_key_path
+
+This one is pretty straight forward, it's the path to your public key used to
+authenticate for Openstack.
+
+##### key_pair
+
+This is often the same as your `username`, but can sometimes be different. If
+you are using the "Nova" command-line tool, you can see what your `key_pair`
+value is by running:
+
+    $ nova keypair-list
+
+You should see output similar to:
+
+    +--------+-------------------------------------------------+
+    | Name   | Fingerprint                                     |
+    +--------+-------------------------------------------------+
+    | jsmith | 0a:1c:2b:3d:1c:2b:3d:1c:2b:3d:1c:2b:3d:1c:2b:3d |
+    +--------+-------------------------------------------------+
+
+Given this output, your `key_pair` value is `jsmith`.
+
+### shanty.yml
+
+After initializing, you need to configure the `shanty.yml` in the root of your
+project.
+
+See the generated `shanty.yml` file for help with configuration.
 
 ## Usage
 
-### init
-
-Initialize the specified directory as a shanty. 
-
-    $ shanty init .
-
-The above command creates the initial shanty skeleton in a project if it is
-not already a shanty. This will create the following files in the specified
-directory: `Vagrantfile`, `puppet/manifests`, `puppet/manifests/main.pp`,
-`puppet/modules`, `puppet/modules/.gitkeep`, `.shanty.yml`
-
-### generate provider_config
-
-Generate the example `~/.shanty/cloud_provider_config.yml` with the following command.
-
-    $ shanty generate provider_config
-
-### test
+### Running Tests
 
 Bring up the shanty with your cloud provider, run the tests, and shutdown the
 cloud node.
 
+    $ cd project_dir
     $ shanty test
+
+To see more output on what is happening, pass the "-v" flag:
+
+    $ shanty test -v
 
 ## Contributing
 
