@@ -1,0 +1,37 @@
+#!/bin/bash --login
+
+export RAILS_ENV=test
+export PROJECT_DIR="/vagrant/<%= @config['project_name'] %>"
+export CI_REPORTS="/vagrant/<%= @config['project_name'] %>/reports"
+
+ssh -oStrictHostKeyChecking=no github.com
+mkdir $PROJECT_DIR
+cd $PROJECT_DIR 
+tar xf ../project.tar
+rvm autolibs packages
+sudo /usr/local/rvm/bin/rvm requirements
+rvm install --create $(cat .ruby-version)
+rvm use $(cat .ruby-version)
+gem install bundler 
+if ! grep -q ci_reporter Gemfile; then
+  echo "gem 'ci_reporter'" >> Gemfile
+fi
+bundle install --without assets development
+
+<% if @config["project_setup"] %>
+  <% @config["project_setup"].each do |step| %>
+    echo "Running step '<%= step %>'"
+    <%= step %>
+  <% end %>
+<% end %>
+
+T=$(date +%s)
+cd $PROJECT_DIR
+<% if @config["tests_to_run"] %>
+  <% @config["tests_to_run"].each do |test_step| %>
+    echo "Running test step '<%= test_step %>'"
+    <%= test_step %>
+  <% end %>
+<% end %>
+T2=$(date +%s)
+find . -mmin $(((T-T2)/60-1)) -name "*.xml" -exec mv {} $CI_REPORTS \; 
