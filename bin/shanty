@@ -1,30 +1,43 @@
 #!/usr/bin/env ruby
-require "thor"
-
 $LOAD_PATH.unshift ::File.expand_path(::File.dirname(__FILE__) + '/../lib')
 
+require "thor"
+require "shanty"
+
 class ShantyCommands < Thor
-  require "shanty"
-
   include Thor::Actions
-
-  # class_option :verbose, :type => :boolean, :default => false, :aliases => "-v", :desc => "Output more detailed messages"
 
   desc "init", "Initializes Shanty in the present working directory"
   long_desc <<-LONGDESC
-    `shanty init` will create the directory ~/.shanty, and add a cloud provider
-    config YAML example to that directory.
-
-    It will also create the following files/directories in the repository it is
-    called from within: Vagrantfile, puppet/manifests,
-    puppet/manifests/main.pp, puppet/modules, puppet/modules/, .shanty.yml
+    `shanty init` will create a .shanty directory in your user's home directory
+    if it doesn't already exist. It will also create an example shanty.yml in
+    the current working directory if one doesn't already exist.
   LONGDESC
   def init
-    invoke "shanty:initializer:init"
+    initializer = Shanty::Initializer.new
+    initializer.init
   end
 
   desc "generate TEMPLATE", "Generates various Shanty files for you, for a given template"
   subcommand "generate", Shanty::Generator
+
+  desc "test [REVISION]", "Builds a Shanty, runs the tests, then destroys the Shanty"
+  long_desc <<-LONGDESC
+    `shanty test [--verbose, -v] [REVISION]` Will spin up a new VM using the
+    configured provider and run the given test steps against the REVISION.
+
+    REVISION is optional, and if omitted will default to "HEAD".
+
+    Passing the option --verbose will output a lot of debugging information, as
+    well as explain exactly which commands are being run. It also enables the
+    --verbose and --debug commands for the Vagrantfile, which will give a
+    tremendous amount of debugging output.
+  LONGDESC
+  option :verbose, :type => :boolean, :aliases => "-v"
+  def test(revision="HEAD")
+    tester = Shanty::Tester.new
+    tester.test(options.merge({"revision" => revision}))
+  end
 
   # desc "build", "Spins up a VM in the RLPC using the project's puppet manifest"
   # method_options %w(force -f) => :boolean
