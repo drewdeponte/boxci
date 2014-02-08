@@ -9,11 +9,7 @@ module Shanty
       end
 
       def create_cloud_provider_config
-        if File.exists?(File.join(ENV['HOME'], ".shanty", "cloud_provider_config.yml"))
-          say "Found cloud_provider_config.yml", :green
-        else
-          copy_file "templates/shanty/cloud_provider_config.yml", "~/.shanty/cloud_provider_config.yml"
-        end
+        copy_file "templates/shanty/cloud_provider_config.yml", "~/.shanty/cloud_provider_config.yml"
       end
 
       def create_repo_puppet_directory

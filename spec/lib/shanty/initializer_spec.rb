@@ -19,38 +19,9 @@ describe Shanty::Initializer do
   end
 
   describe "#create_cloud_provider_config" do
-    before do
-      allow(subject).to receive(:say)
-    end
-
-    it "checks if the file exists" do
-      expect(File).to receive(:exists?) do |path|
-        expect(path).to include("cloud_provider_config.yml")
-      end
-
+    it "copies the cloud_provider_config to the user's root" do
+      expect(subject).to receive(:copy_file).with("templates/shanty/cloud_provider_config.yml", "~/.shanty/cloud_provider_config.yml")
       subject.create_cloud_provider_config
-    end
-
-    context "when the file already exist" do
-      before do
-        allow(File).to receive(:exists?).and_return(true)
-      end
-
-      it "does nothing" do
-        subject.create_cloud_provider_config
-        expect(subject).to_not receive(:copy_file)
-      end
-    end
-
-    context "when the file doesn't already exist" do
-      before do
-        allow(File).to receive(:exists?).and_return(false)
-      end
-
-      it "copies the cloud_provider_config to the user's root" do
-        expect(subject).to receive(:copy_file).with("templates/shanty/cloud_provider_config.yml", "~/.shanty/cloud_provider_config.yml")
-        subject.create_cloud_provider_config
-      end
     end
   end
 
