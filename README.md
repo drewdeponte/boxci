@@ -79,9 +79,9 @@ You should see output similar to:
 
 Given this output, your `key_pair` value is `jsmith`.
 
-### shanty.yml
+### .shanty.yml
 
-After initializing, you need to configure the `shanty.yml` in the root of your
+After initializing, you need to configure the `.shanty.yml` in the root of your
 project.
 
 See the generated `shanty.yml` file for help with configuration.
