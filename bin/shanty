@@ -20,9 +20,6 @@ class ShantyCLI < Thor
     initializer.init(language)
   end
 
-  desc "generate TEMPLATE", "Generates various Shanty files for you, for a given template"
-  subcommand "generate", Shanty::Generator
-
   desc "build", "Generates Vagrantfile & starter Puppet manifest"
   long_desc <<-LONGDESC
     `shanty build` will create a starting Vagrantfile in the current working
