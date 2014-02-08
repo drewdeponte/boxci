@@ -3,3 +3,8 @@
 - Extract all options from template files, move to default template files
   - Search user's config files for overrides on any default configs
   - Add documentation for all allowed config values
+- Build a template/skeleton feature where a user could provide via the
+  commandline a URL to a template/skeleton to use to aid in getting sane
+  default config values for their environment. For example reachlocal could
+  have one and that could have all the defaults for RLPC minus the username,
+  password stuff.
