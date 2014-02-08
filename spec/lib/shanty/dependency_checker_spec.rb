@@ -192,7 +192,7 @@ describe Shanty::DependencyChecker do
     end
 
     it "checks for the Shanty config file in the repo root" do
-      expect(File).to receive(:exists?).with(File.join(local_repository_path, "shanty.yml")).and_return(true)
+      expect(File).to receive(:exists?).with(File.join(local_repository_path, ".shanty.yml")).and_return(true)
       subject.verify_shanty_config
     end
 

@@ -43,7 +43,7 @@ module Shanty
       end
 
       def verify_shanty_config
-        config_file = File.join(local_repository_path, "shanty.yml")
+        config_file = File.join(local_repository_path, ".shanty.yml")
         if !File.exists?(config_file)
           raise Shanty::MissingDependency, "It looks like you're missing the Shanty configuration file. You can generate an example file by running: \"shanty init\" "
         end

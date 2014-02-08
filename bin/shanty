@@ -4,7 +4,7 @@ $LOAD_PATH.unshift ::File.expand_path(::File.dirname(__FILE__) + '/../lib')
 require "thor"
 require "shanty"
 
-class ShantyCommands < Thor
+class ShantyCLI < Thor
   include Thor::Actions
 
   desc "init <language>", "Initializes Shanty in the present working directory"
@@ -13,7 +13,7 @@ class ShantyCommands < Thor
     directory if it doesn't already exist. It will also create a starter
     .shanty.yml in the current working directory if one doesn't already exist.
 
-    Supported Languages: ruby, java
+    Supported Languages: ruby
   LONGDESC
   def init(language)
     initializer = Shanty::Initializer.new
@@ -23,14 +23,15 @@ class ShantyCommands < Thor
   desc "generate TEMPLATE", "Generates various Shanty files for you, for a given template"
   subcommand "generate", Shanty::Generator
 
-  desc "create", "Generates Vagrantfile & starter Puppet manifest"
+  desc "build", "Generates Vagrantfile & starter Puppet manifest"
   long_desc <<-LONGDESC
-    `shanty create` will create a Vagrantfile in the current working directory
-    as well as setup a starting puppet manifiest and its tree structure.
+    `shanty build` will create a starting Vagrantfile in the current working
+    directory as well as setup a starting puppet manifiest and its tree
+    structure.
   LONGDESC
-  def create
-    # generate the project Vagrantfile
-    # generate the starter Puppet manifest and directory structure
+  def build
+    builder = Shanty::Builder.new
+    builder.build
   end
 
   desc "test [REVISION]", "Builds a Shanty, runs the tests, then destroys the Shanty"
@@ -50,24 +51,6 @@ class ShantyCommands < Thor
     tester = Shanty::Tester.new
     tester.test(options.merge({"revision" => revision}))
   end
-
-
-  # desc "build", "Spins up a VM in the RLPC using the project's puppet manifest"
-  # method_options %w(force -f) => :boolean
-  # def build
-  #   if options.force?
-  #     Shanty::VMBuilder.build!
-  #   else
-  #     Shanty::VMBuilder.build
-  #   end
-  # end
-
-  # desc "ssh", "Creates an SSH tunnel into the current VM"
-  # def ssh
-  #   puts "Logging into your Shanty VM..."
-  #   sleep 1
-  #   puts "No VM found! Create one with 'shanty build'"
-  # end
 end
 
-ShantyCommands.start
+ShantyCLI.start
