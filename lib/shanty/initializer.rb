@@ -3,9 +3,9 @@ require "thor"
 module Shanty
   class Initializer < Shanty::Base
     no_commands do
-      def init
+      def init(language)
         create_cloud_provider_config
-        create_dot_shanty_yml
+        create_dot_shanty_yml(language)
       end
 
       def create_cloud_provider_config
@@ -24,11 +24,10 @@ module Shanty
         end
       end
 
-      def create_dot_shanty_yml
+      def create_dot_shanty_yml(language)
         shanty_file = File.join(local_repository_path, ".shanty.yml")
-        if !File.exists?(shanty_file)
-          copy_file "templates/.shanty.yml", shanty_file
-        end
+        @language = language
+        template "templates/dot_shanty.yml.tt", shanty_file
       end
     end
   end

@@ -7,15 +7,15 @@ require "shanty"
 class ShantyCommands < Thor
   include Thor::Actions
 
-  desc "init", "Initializes Shanty in the present working directory"
+  desc "init <language>", "Initializes Shanty in the present working directory"
   long_desc <<-LONGDESC
-    `shanty init` will create a .shanty directory in your user's home directory
-    if it doesn't already exist. It will also create an example shanty.yml in
-    the current working directory if one doesn't already exist.
+    `shanty init <language>` will create a .shanty directory in your user's home
+    directory if it doesn't already exist. It will also create a starter
+    .shanty.yml in the current working directory if one doesn't already exist.
   LONGDESC
-  def init
+  def init(language)
     initializer = Shanty::Initializer.new
-    initializer.init
+    initializer.init(language)
   end
 
   desc "generate TEMPLATE", "Generates various Shanty files for you, for a given template"

@@ -9,12 +9,12 @@ describe Shanty::Initializer do
 
     it "creates the cloud_provider_config file" do
       expect(subject).to receive(:create_cloud_provider_config)
-      subject.init
+      subject.init(double)
     end
 
     it "creates the shanty yaml file" do
       expect(subject).to receive(:create_dot_shanty_yml)
-      subject.init
+      subject.init(double)
     end
   end
 
@@ -95,29 +95,18 @@ describe Shanty::Initializer do
 
     before do
       allow(subject).to receive(:local_repository_path).and_return(local_repository_path)
-      allow(subject).to receive(:copy_file)
     end
 
-    context "when the shanty.yml file already exists" do
-      before do
-        allow(File).to receive(:exists?).and_return(true)
-      end
-
-      it "does nothing" do
-        expect(subject).to_not receive(:copy_file)
-        subject.create_dot_shanty_yml
-      end
+    it "assigns the given language to @language" do
+      allow(subject).to receive(:template)
+      language = double
+      subject.create_dot_shanty_yml(language)
+      expect(subject.instance_variable_get(:@language)).to eq(language)
     end
 
-    context "when the shanty.yml file does not exist" do
-      before do
-        allow(File).to receive(:exists?).and_return(false)
-      end
-
-      it "copies the shanty.yml from the templates to the project root" do
-        expect(subject).to receive(:copy_file).with("templates/.shanty.yml", File.join(local_repository_path, ".shanty.yml"))
-        subject.create_dot_shanty_yml
-      end
+    it "renders the dot_shanty.yml.tt from the templates to the project root .shanty.yml" do
+      expect(subject).to receive(:template).with("templates/dot_shanty.yml.tt", File.join(local_repository_path, ".shanty.yml"))
+      subject.create_dot_shanty_yml('ruby')
     end
   end
 end

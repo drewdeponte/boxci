@@ -7,26 +7,21 @@ continuous integration environments easy.
 
 ## Installation
 
-Add this line to your application's Gemfile:
-
-    gem 'shanty'
-
-And then execute:
-
-    $ bundle
-
-Or install it yourself as:
+Install it by running the following:
 
     $ gem install shanty
 
 ## Setup
 
-Run the "init" command to create the basic Shanty files in your project's
-repository root. It will also create the `~/.shanty` directory if it doesn't
-already exist.
+To *shantify* your project you need to run the `shanty init <language>` command.
+This command will create an initial `.shanty.yml` config for you in the
+current working directory. Therefore, you should run this command from the
+root of your project. It will also handle creating your user level shanty
+configurations in the `~/.shanty` direcotry. An example of this can be seen as
+follows:
 
     $ cd project_dir
-    $ shanty init
+    $ shanty init ruby
 
 ### cloud_provider_config.yml
 

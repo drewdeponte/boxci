@@ -1,0 +1,82 @@
+# Provider - Required
+#==============================================================================
+# This specifies the cloud provider to use for spinning up the node. Currently
+# there is only support for Openstack (openstack) and Amazon AWS (aws).
+#==============================================================================
+provider: openstack
+
+# Language - Required
+#==============================================================================
+# Specify the type of project this is. Currently, there is only support for
+# ruby, and js. This will affect which commands are run before and after the
+# provisioning steps, and "project_setup" option.
+#==============================================================================
+language: ruby
+
+# Tests to Run - Required
+#==============================================================================
+# This is a YAML array of commands that run your test suite.
+#
+# Add the config value like this:
+#
+# tests_to_run:
+#   - echo "this is the first line executed"
+#   - echo "this is the second line executed"
+#
+# The commands will be unique most applications, but there are some examples
+# for a few specific environment setups to get your started.
+#
+#
+# Ruby/Rails with RSpec and Cucumber
+#
+# tests_to_run:
+#   - bundle exec rspec spec
+#   - bundle exec cucumber features
+#
+#
+# Ruby/Rails with RSpec and Cucumber within a Bamboo CI server
+#
+# tests_to_run:
+#   - bundle exec rspec --require ci/reporter/rake/rspec_loader --format CI::Reporter::RSpec spec
+#   - bundle exec ruby -r ci/reporter/rake/cucumber_loader -S cucumber --format CI::Reporter::Cucumber
+#==============================================================================
+tests_to_run:
+  - bundle exec rspec spec
+
+# Project Name - Required
+#==============================================================================
+# You can specify the name Shanty uses for your project. This is used to create
+# the working directory for the box while it's being built/deployed. They will
+# be created inside the ~/.shanty folder, and removed after each run.
+#
+# Add the config value like this:
+#
+# project_name: shanty_test
+#
+# If no value is given, the folder name of your repository will be used.
+#==============================================================================
+project_name: shanty_test
+
+# Project Setup - Optional
+#==============================================================================
+# This is a YAML array of commands that need to be run on your provisioned box
+# before the test suite can execute. Often times this involves creating and
+# migrating databases, or configuring dependencies.
+#
+# Add the config value like this:
+#
+# project_setup:
+#   - echo "this is the first line executed"
+#   - echo "this is the second line executed"
+#==============================================================================
+
+
+# Puppet Facters - Optional
+#==============================================================================
+#
+# puppet_facters:
+#   box_version: v1.0.0
+#   service: rpp_web_app
+#   string_ruby_version: ruby-1.9.3-p125
+#   string_gemset: rpp_web_app
+#==============================================================================
