@@ -4,7 +4,7 @@ require "net/scp"
 
 module Shanty
   class Tester < Shanty::Base
-    attr_accessor :gem_path, :config, :report_location, :project_folder, :options
+    attr_accessor :gem_path, :config, :report_location, :project_folder
 
     PROVIDERS = {
       "openstack" => {
@@ -43,19 +43,19 @@ module Shanty
       end
 
       def initial_setup(options)
-        @options = options
         @gem_path = File.expand_path(File.dirname(__FILE__) + "/../..")
         @report_location = File.join(local_repository_path, "reports")
 
         load_config_files
+        @config.merge!(options)
       end
 
       def revision
-        @options["revision"]
+        @config["revision"]
       end
 
       def verbose?
-        @options["verbose"] == true
+        @config["verbose"] == true
       end
 
       def load_config_files
@@ -200,10 +200,10 @@ module Shanty
       def download_test_reports
         Net::SSH.start("default", "ubuntu", {:config => File.join(@project_folder, "ssh-config.local")}) do |ssh|
           empty_directory @report_location, :verbose => verbose?
-          say "Removing old reports...", :blue if verbose?
+          # say "Removing old reports...", :blue if verbose?
           Dir["#{@report_location}/*.*"].each { |file| FileUtils.rm(file) }
           say "Downloading the reports...", :blue if verbose?
-          ssh.scp.download! "/vagrant/#{@config['project_name']}/reports", local_repository_path, :recursive => true
+          ssh.scp.download! "/vagrant/#{@config['project_name']}/reports/*", @report_location, :recursive => true
         end
       end
 
