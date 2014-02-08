@@ -4,7 +4,7 @@ describe Shanty::Initializer do
   describe "#init" do
     before do
       allow(subject).to receive(:create_cloud_provider_config)
-      allow(subject).to receive(:create_shanty_yml)
+      allow(subject).to receive(:create_dot_shanty_yml)
     end
 
     it "creates the cloud_provider_config file" do
@@ -13,7 +13,7 @@ describe Shanty::Initializer do
     end
 
     it "creates the shanty yaml file" do
-      expect(subject).to receive(:create_shanty_yml)
+      expect(subject).to receive(:create_dot_shanty_yml)
       subject.init
     end
   end
@@ -90,7 +90,7 @@ describe Shanty::Initializer do
     end
   end
 
-  describe "#create_shanty_yml" do
+  describe "#create_dot_shanty_yml" do
     let(:local_repository_path) { "/somewhere" }
 
     before do
@@ -105,7 +105,7 @@ describe Shanty::Initializer do
 
       it "does nothing" do
         expect(subject).to_not receive(:copy_file)
-        subject.create_shanty_yml
+        subject.create_dot_shanty_yml
       end
     end
 
@@ -115,8 +115,8 @@ describe Shanty::Initializer do
       end
 
       it "copies the shanty.yml from the templates to the project root" do
-        expect(subject).to receive(:copy_file).with("templates/shanty.yml", File.join(local_repository_path, "shanty.yml"))
-        subject.create_shanty_yml
+        expect(subject).to receive(:copy_file).with("templates/.shanty.yml", File.join(local_repository_path, ".shanty.yml"))
+        subject.create_dot_shanty_yml
       end
     end
   end

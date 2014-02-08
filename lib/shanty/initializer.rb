@@ -5,7 +5,7 @@ module Shanty
     no_commands do
       def init
         create_cloud_provider_config
-        create_shanty_yml
+        create_dot_shanty_yml
       end
 
       def create_cloud_provider_config
@@ -24,10 +24,10 @@ module Shanty
         end
       end
 
-      def create_shanty_yml
-        shanty_file = File.join(local_repository_path, "shanty.yml")
+      def create_dot_shanty_yml
+        shanty_file = File.join(local_repository_path, ".shanty.yml")
         if !File.exists?(shanty_file)
-          copy_file "templates/shanty.yml", shanty_file
+          copy_file "templates/.shanty.yml", shanty_file
         end
       end
     end
