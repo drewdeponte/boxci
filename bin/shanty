@@ -21,6 +21,16 @@ class ShantyCommands < Thor
   desc "generate TEMPLATE", "Generates various Shanty files for you, for a given template"
   subcommand "generate", Shanty::Generator
 
+  desc "create", "Generates Vagrantfile & starter Puppet manifest"
+  long_desc <<-LONGDESC
+    `shanty create` will create a Vagrantfile in the current working directory
+    as well as setup a starting puppet manifiest and its tree structure.
+  LONGDESC
+  def create
+    # generate the project Vagrantfile
+    # generate the starter Puppet manifest and directory structure
+  end
+
   desc "test [REVISION]", "Builds a Shanty, runs the tests, then destroys the Shanty"
   long_desc <<-LONGDESC
     `shanty test [--verbose, -v] [REVISION]` Will spin up a new VM using the
@@ -38,6 +48,7 @@ class ShantyCommands < Thor
     tester = Shanty::Tester.new
     tester.test(options.merge({"revision" => revision}))
   end
+
 
   # desc "build", "Spins up a VM in the RLPC using the project's puppet manifest"
   # method_options %w(force -f) => :boolean
