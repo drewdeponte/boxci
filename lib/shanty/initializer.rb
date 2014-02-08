@@ -12,6 +12,7 @@ module Shanty
         copy_file "templates/shanty/cloud_provider_config.yml", "~/.shanty/cloud_provider_config.yml"
       end
 
+      # TODO: Remove this because it isn't used here.
       def create_repo_puppet_directory
         if File.directory?(File.join(local_repository_path, "puppet"))
           say "Found puppet files", :green
