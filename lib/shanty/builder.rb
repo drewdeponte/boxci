@@ -12,18 +12,15 @@ module Shanty
         dependency_checker = Shanty::DependencyChecker.new
         dependency_checker.verify_shanty_config
 
-        load_shanty_config
+        @project_config = Shanty.project_config
         template "templates/Vagrantfile", File.join(local_repository_path, "Vagrantfile")
       end
 
       def generate_starter_puppet_manifest
         directory "templates/puppet", File.join(local_repository_path, "puppet")
-      end
-
-      def load_shanty_config
-        local_repository_path = File.expand_path(%x(pwd)).strip
-        config_file = File.join(local_repository_path, ".shanty.yml")
-        @config = YAML::load_file(config_file)
+        # TODO: split this out into a LanguageFactory
+        # language = Shanty::LanguageFactory.build(Shanty.project_config.language)
+        # language.generate_starter_puppet_manifest
       end
     end
   end

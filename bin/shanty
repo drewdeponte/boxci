@@ -13,7 +13,7 @@ class ShantyCLI < Thor
     directory if it doesn't already exist. It will also create a starter
     .shanty.yml in the current working directory if one doesn't already exist.
 
-    Supported Languages: ruby
+    Supported Languages: #{Shanty::Language.supported_languages.join(", ")}
   LONGDESC
   def init(language)
     initializer = Shanty::Initializer.new

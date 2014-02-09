@@ -1,10 +1,23 @@
-require "shanty/version"
-require "shanty/base"
-require "shanty/initializer"
-require "shanty/builder"
-require "shanty/dependency_checker"
-require "shanty/tester"
+require 'shanty/version'
+require 'shanty/base'
+require 'shanty/project_config'
+require 'shanty/initializer'
+require 'shanty/builder'
+require 'shanty/dependency_checker'
+require 'shanty/tester'
+require 'shanty/language'
+require 'shanty/languages/ruby'
 
 module Shanty
   class MissingDependency < StandardError; end
+
+  def self.project_config
+    if @project_config
+      return @project_config
+    else
+      @project_config = Shanty::ProjectConfig.new
+      @project_config.load
+      return @project_config
+    end
+  end
 end

@@ -23,7 +23,6 @@ describe Shanty::Builder do
     before do
       allow(subject).to receive(:template)
       allow(subject).to receive(:local_repository_path).and_return(local_repository_path)
-      allow(subject).to receive(:load_shanty_config)
       allow(Shanty::DependencyChecker).to receive(:new).and_return(dependency_checker)
       allow(dependency_checker).to receive(:verify_shanty_config)
       subject.instance_variable_set(:@config, config)
@@ -34,9 +33,16 @@ describe Shanty::Builder do
       subject.generate_project_vagrantfile
     end
 
-    it "loads the shanty config file" do
-      expect(subject).to receive(:load_shanty_config)
+    it "gets shanty project config hash" do
+      expect(Shanty).to receive(:project_config)
       subject.generate_project_vagrantfile
+    end
+
+    it "assigns the shanty project config to instance variable" do
+      project_config_double = double
+      allow(Shanty).to receive(:project_config).and_return(project_config_double)
+      subject.generate_project_vagrantfile
+      expect(subject.instance_variable_get(:@project_config)).to eq(project_config_double)
     end
 
     it "copies the Vagrantfile template for the specified language to the user's home directory" do
@@ -55,19 +61,6 @@ describe Shanty::Builder do
     it "copies the template to the repo" do
       expect(subject).to receive(:directory).with("templates/puppet", File.join(local_repository_path, "puppet"))
       subject.generate_starter_puppet_manifest
-    end
-  end
-
-  describe "#load_shanty_config" do
-    let(:config_file_path) { "/some/path" }
-
-    before do
-      allow(File).to receive(:join).and_return(config_file_path)
-    end
-
-    it "uses YAML to parse the config file" do
-      expect(YAML).to receive(:load_file).with(config_file_path)
-      subject.load_shanty_config
     end
   end
 end
