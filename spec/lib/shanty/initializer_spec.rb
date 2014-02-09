@@ -25,42 +25,6 @@ describe Shanty::Initializer do
     end
   end
 
-  describe "#create_repo_puppet_directory" do
-    let(:local_repository_path) { "/somewhere" }
-
-    before do
-      allow(subject).to receive(:local_repository_path).and_return(local_repository_path)
-      allow(subject).to receive(:say)
-    end
-
-    context "when the puppet directory exists" do
-      before do
-        allow(File).to receive(:directory?).and_return(true)
-      end
-
-      it "outputs that it found the file" do
-        expect(subject).to receive(:say)
-        subject.create_repo_puppet_directory
-      end
-
-      it "does not copy the template directory" do
-        expect(subject).to_not receive(:directory)
-        subject.create_repo_puppet_directory
-      end
-    end
-
-    context "when the puppet directory does not exist" do
-      before do
-        allow(subject).to receive(:directory)
-      end
-
-      it "copies the template puppet directory to the project root" do
-        expect(subject).to receive(:directory).with("templates/puppet", File.join(local_repository_path, "puppet"))
-        subject.create_repo_puppet_directory
-      end
-    end
-  end
-
   describe "#create_dot_shanty_yml" do
     let(:local_repository_path) { "/somewhere" }
 
