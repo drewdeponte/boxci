@@ -124,15 +124,15 @@ describe Shanty::DependencyChecker do
   end
 
   describe "#verify_repo_puppet_directory" do
-    let(:local_repository_path) { "/some/path" }
+    let(:project_path) { "/some/path" }
 
     before do
-      allow(subject).to receive(:local_repository_path).and_return(local_repository_path)
+      allow(Shanty).to receive(:project_path).and_return(project_path)
       allow(File).to receive(:directory?).and_return(true)
     end
 
     it "checks for the puppet directory in the repo root" do
-      expect(File).to receive(:directory?).with(File.join(local_repository_path, "puppet")).and_return(true)
+      expect(File).to receive(:directory?).with(File.join(project_path, "puppet")).and_return(true)
       subject.verify_repo_puppet_directory
     end
 
@@ -154,15 +154,15 @@ describe Shanty::DependencyChecker do
   end
 
   describe "#verify_vagrantfile" do
-    let(:local_repository_path) { "/some/path" }
+    let(:project_path) { "/some/path" }
 
     before do
-      allow(subject).to receive(:local_repository_path).and_return(local_repository_path)
+      allow(Shanty).to receive(:project_path).and_return(project_path)
       allow(File).to receive(:exists?).and_return(true)
     end
 
     it "checks for the Vagrantfile in the repo root" do
-      expect(File).to receive(:exists?).with(File.join(local_repository_path, "Vagrantfile")).and_return(true)
+      expect(File).to receive(:exists?).with(File.join(project_path, "Vagrantfile")).and_return(true)
       subject.verify_vagrantfile
     end
 
@@ -184,15 +184,15 @@ describe Shanty::DependencyChecker do
   end
 
   describe "#verify_shanty_config" do
-    let(:local_repository_path) { "/some/path" }
+    let(:project_path) { "/some/path" }
 
     before do
-      allow(subject).to receive(:local_repository_path).and_return(local_repository_path)
+      allow(Shanty).to receive(:project_path).and_return(project_path)
       allow(File).to receive(:exists?).and_return(true)
     end
 
     it "checks for the Shanty config file in the repo root" do
-      expect(File).to receive(:exists?).with(File.join(local_repository_path, ".shanty.yml")).and_return(true)
+      expect(File).to receive(:exists?).with(File.join(project_path, ".shanty.yml")).and_return(true)
       subject.verify_shanty_config
     end
 

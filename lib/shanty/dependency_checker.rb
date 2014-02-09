@@ -1,5 +1,7 @@
 module Shanty
-  class DependencyChecker < Shanty::Base
+  class DependencyChecker < Thor
+    include Thor::Actions
+
     no_commands do
       def verify_all
         begin
@@ -27,7 +29,7 @@ module Shanty
       end
 
       def verify_repo_puppet_directory
-        puppet_directory = File.join(local_repository_path, "puppet")
+        puppet_directory = File.join(Shanty.project_path, "puppet")
         error_message = "It looks like you don't have Puppet files setup for your repository. You can generate example files by running: \"shanty init\""
 
         if !File.directory?(puppet_directory)
@@ -36,14 +38,14 @@ module Shanty
       end
 
       def verify_vagrantfile
-        vagrant_file = File.join(local_repository_path, "Vagrantfile")
+        vagrant_file = File.join(Shanty.project_path, "Vagrantfile")
         if !File.exists?(vagrant_file)
           raise Shanty::MissingDependency, "It looks like you don't have a Vagrantfile setup for your repository. You can generate an example file by running: \"shanty generate vagrantfile\" "
         end
       end
 
       def verify_shanty_config
-        config_file = File.join(local_repository_path, ".shanty.yml")
+        config_file = File.join(Shanty.project_path, ".shanty.yml")
         if !File.exists?(config_file)
           raise Shanty::MissingDependency, "It looks like you're missing the Shanty configuration file. You can generate an example file by running: \"shanty init\" "
         end

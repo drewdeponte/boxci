@@ -3,7 +3,9 @@ require "net/ssh"
 require "net/scp"
 
 module Shanty
-  class Tester < Shanty::Base
+  class Tester < Thor
+    include Thor::Actions
+
     attr_accessor :gem_path, :config, :report_location, :project_folder
 
     PROVIDERS = {
@@ -44,7 +46,7 @@ module Shanty
 
       def initial_setup(options)
         @gem_path = File.expand_path(File.dirname(__FILE__) + "/../..")
-        @report_location = File.join(local_repository_path, "reports")
+        @report_location = File.join(Shanty.project_path, "reports")
 
         load_config_files
         @config.merge!(options)
@@ -60,13 +62,13 @@ module Shanty
 
       def load_config_files
         # Load the shanty.yml file from the root of the clone of the project
-        config_file = File.join(local_repository_path, "shanty.yml")
+        config_file = File.join(Shanty.project_path, "shanty.yml")
         @config = YAML::load_file(config_file)
 
         # Load the ~/.shanty/provider_config.yml
         @provider_config = YAML::load_file(File.join(File.expand_path(ENV['HOME']), '.shanty', "cloud_provider_config.yml"))
         @config[@config["provider"]] = @provider_config[@config["provider"]].merge(@config[@config["provider"]] || {})
-        @config['puppet_path'] = File.join(local_repository_path, "puppet")
+        @config['puppet_path'] = File.join(Shanty.project_path, "puppet")
 
         @project_folder = File.join(File.expand_path(ENV['HOME']), '.shanty', "#{@config['project_name']}-#{revision}")
       end
@@ -76,7 +78,7 @@ module Shanty
       end
 
       def create_project_archive
-        inside local_repository_path do
+        inside Shanty.project_path do
           run "git checkout #{revision}", :verbose => verbose?
           run "git submodule update --init", :verbose => verbose?
           run "tar cf #{File.join(@project_folder, "project.tar")} --exclude .git --exclude \"*.log\" --exclude node_modules .", :verbose => verbose?

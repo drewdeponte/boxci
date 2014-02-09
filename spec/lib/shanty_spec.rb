@@ -41,4 +41,32 @@ describe Shanty do
       end
     end
   end
+
+  describe ".project_path" do
+    context "when the value is already set" do
+      before do
+        subject.instance_variable_set(:@project_path, "abc")
+      end
+
+      it "returns it" do
+        expect(subject.project_path).to eq("abc")
+      end
+    end
+
+    context "when the value is not set" do
+      before do
+        subject.instance_variable_set(:@project_path, nil)
+        allow(File).to receive(:expand_path).and_return("/some/path")
+      end
+
+      it "gets the project path" do
+        expect(File).to receive(:expand_path).and_return("/some/path")
+        subject.project_path
+      end
+
+      it "sets the result to the instance variable" do
+        expect(subject.project_path).to eq("/some/path")
+      end
+    end
+  end
 end

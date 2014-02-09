@@ -15,8 +15,7 @@ module Shanty
     private
     
     def read_project_config_hash
-      local_repository_path = File.expand_path(%x(pwd)).strip
-      project_config_path = File.join(local_repository_path, ".shanty.yml")
+      project_config_path = File.join(Shanty.project_path, ".shanty.yml")
       return YAML::load_file(project_config_path)
     end
   end

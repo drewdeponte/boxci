@@ -1,10 +1,10 @@
 require 'shanty/version'
-require 'shanty/base'
 require 'shanty/project_config'
 require 'shanty/initializer'
 require 'shanty/builder'
 require 'shanty/dependency_checker'
 require 'shanty/tester'
+require 'shanty/language_factory'
 require 'shanty/language'
 require 'shanty/languages/ruby'
 
@@ -19,5 +19,9 @@ module Shanty
       @project_config.load
       return @project_config
     end
+  end
+
+  def self.project_path
+    @project_path ||= File.expand_path(%x(pwd)).strip
   end
 end
