@@ -11,3 +11,5 @@
 - Add shanty lint functionality that verifies the required .shanty.yml config
   exists, the provider config exists, and that the required fields in those
   configs exist are have valid values.
+- Add --provider=aws as an optional option to the `shanty init` command. That
+  way it can generate different provider_configs for the different providers.
