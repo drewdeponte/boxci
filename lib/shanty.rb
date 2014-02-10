@@ -1,5 +1,6 @@
 require 'shanty/version'
 require 'shanty/project_config'
+require 'shanty/provider_config'
 require 'shanty/initializer'
 require 'shanty/builder'
 require 'shanty/dependency_checker'
@@ -18,6 +19,16 @@ module Shanty
       @project_config = Shanty::ProjectConfig.new
       @project_config.load
       return @project_config
+    end
+  end
+
+  def self.provider_config
+    if @provider_config
+      return @provider_config
+    else
+      @provider_config = Shanty::ProviderConfig.new
+      @provider_config.load
+      return @provider_config
     end
   end
 
