@@ -20,7 +20,7 @@ module Shanty
     LONGDESC
     def init(language, provider=DEFAULT_PROVIDER)
       initializer = Shanty::Initializer.new
-      initializer.init(language)
+      initializer.init(language, provider)
     end
 
     desc "build", "Generates Vagrantfile & starter Puppet manifest"

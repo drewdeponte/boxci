@@ -3,29 +3,59 @@ require "spec_helper"
 describe Shanty::Initializer do
   describe "#init" do
     before do
-      allow(subject).to receive(:create_cloud_provider_config)
-      allow(subject).to receive(:create_dot_shanty_yml)
+      allow(subject).to receive(:create_provider_config)
+      allow(subject).to receive(:set_default_provider)
+      allow(subject).to receive(:create_project_config)
     end
 
-    it "creates the cloud_provider_config file" do
-      expect(subject).to receive(:create_cloud_provider_config)
-      subject.init(double)
+    it "creates provider specific config" do
+      provider_double = double
+      expect(subject).to receive(:create_provider_config).with(provider_double)
+      subject.init(double, provider_double)
     end
 
-    it "creates the shanty yaml file" do
-      expect(subject).to receive(:create_dot_shanty_yml)
-      subject.init(double)
+    it "sets the default provider" do
+      provider_double = double
+      expect(subject).to receive(:set_default_provider).with(provider_double)
+      subject.init(double, provider_double)
+    end
+
+    it "creates the project config" do
+      language_double = double
+      expect(subject).to receive(:create_project_config).with(language_double)
+      subject.init(language_double, double)
     end
   end
 
-  describe "#create_cloud_provider_config" do
-    it "copies the cloud_provider_config to the user's root" do
-      expect(subject).to receive(:copy_file).with("templates/shanty/cloud_provider_config.yml", "~/.shanty/cloud_provider_config.yml")
-      subject.create_cloud_provider_config
+  describe "#create_provider_config" do
+    it "builds a provider config object" do
+      provider_double = double
+      expect(Shanty::ProviderFactory).to receive(:build).with(provider_double).and_return(double(:generate_provider_config => nil))
+      subject.create_provider_config(provider_double)
+    end
+
+    it "generates the provider config" do
+      provider_obj_double = double
+      allow(Shanty::ProviderFactory).to receive(:build).and_return(provider_obj_double)
+      expect(provider_obj_double).to receive(:generate_provider_config)
+      subject.create_provider_config(double)
     end
   end
 
-  describe "#create_dot_shanty_yml" do
+  describe "#set_default_provider" do
+    it "assigns the provider to an instance variable" do
+      allow(subject).to receive(:template)
+      subject.set_default_provider('aws')
+      expect(subject.instance_variable_get(:@provider)).to eq('aws')
+    end
+
+    it "creates the provider_config.yml setting the default provider" do
+      expect(subject).to receive(:template).with("templates/shanty/provider_config.yml.tt", "~/.shanty/provider_config.yml")
+      subject.set_default_provider('aws')
+    end
+  end
+
+  describe "#create_project_config" do
     let(:local_repository_path) { "/somewhere" }
 
     before do
@@ -35,7 +65,7 @@ describe Shanty::Initializer do
     it "assigns the given language to @language" do
       allow(subject).to receive(:template)
       language = double
-      subject.create_dot_shanty_yml(language)
+      subject.create_project_config(language)
       expect(subject.instance_variable_get(:@language)).to eq(language)
     end
 
@@ -43,13 +73,13 @@ describe Shanty::Initializer do
       allow(subject).to receive(:template)
       ruby_version = double
       allow(subject).to receive(:dot_ruby_version).and_return(ruby_version)
-      subject.create_dot_shanty_yml('ruby')
+      subject.create_project_config('ruby')
       expect(subject.instance_variable_get(:@current_ruby_version)).to eq(ruby_version)
     end
 
     it "renders the dot_shanty.yml.tt from the templates to the project root .shanty.yml" do
       expect(subject).to receive(:template).with("templates/dot_shanty.yml.tt", File.join(Shanty.project_path, ".shanty.yml"))
-      subject.create_dot_shanty_yml('ruby')
+      subject.create_project_config('ruby')
     end
   end
 

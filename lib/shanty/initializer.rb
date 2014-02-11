@@ -7,16 +7,23 @@ module Shanty
     source_root(File.dirname(__FILE__))
 
     no_commands do
-      def init(language)
-        create_cloud_provider_config
-        create_dot_shanty_yml(language)
+      def init(language, provider)
+        create_provider_config(provider)
+        set_default_provider(provider)
+        create_project_config(language)
       end
 
-      def create_cloud_provider_config
-        copy_file "templates/shanty/cloud_provider_config.yml", "~/.shanty/cloud_provider_config.yml"
+      def create_provider_config(provider)
+        provider = Shanty::ProviderFactory.build(provider)
+        provider.generate_provider_config
       end
 
-      def create_dot_shanty_yml(language)
+      def set_default_provider(provider)
+        @provider = provider
+        template "templates/shanty/provider_config.yml.tt", "~/.shanty/provider_config.yml"
+      end
+
+      def create_project_config(language)
         shanty_file = File.join(Shanty.project_path, ".shanty.yml")
         @language = language
         @current_ruby_version = dot_ruby_version

@@ -1,0 +1,4 @@
+username: rl.user
+password: rl.password
+private_key_path: "~/.ssh/id_rsa"
+key_pair: rl.keypair
