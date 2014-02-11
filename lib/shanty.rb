@@ -16,6 +16,7 @@ require 'shanty/cli'
 
 module Shanty
   class MissingDependency < StandardError; end
+  class PureVirtualMethod < StandardError; end
 
   def self.project_config
     if @project_config

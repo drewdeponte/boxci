@@ -16,7 +16,7 @@ module Shanty
       end
 
       def generate_starter_puppet_manifest
-        raise "generate_starter_puppet_manifest must be implemented on Shanty::Language classes"
+        raise ::Shanty::PureVirtualMethod, "'generate_starter_puppet_manifest' must be implemented on Shanty::Language classes"
       end
     end
   end

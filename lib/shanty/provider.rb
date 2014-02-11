@@ -16,11 +16,15 @@ module Shanty
       end
 
       def generate_provider_config
-        raise "generate_provider_config must be implemented on Shanty::Provider classes"
+        raise ::Shanty::PureVirtualMethod, "'generate_provider_config' must be implemented on Shanty::Provider classes"
+      end
+
+      def generate_provider_vagrantfile
+        raise ::Shanty::PureVirtualMethod, "'generate_provider_vagrantfile' must be implemented on Shanty::Provider classes"
       end
 
       def config
-        raise "config must be implemented on Shanty::Provider classes"
+        raise ::Shanty::PureVirtualMethod, "'config' must be implemented on Shanty::Provider classes"
       end
     end
   end
