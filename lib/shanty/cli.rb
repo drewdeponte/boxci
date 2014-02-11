@@ -33,11 +33,10 @@ module Shanty
       builder.build
     end
 
-    desc "test [--verbose, -v] [REVISION] [PROVIDER]", "Spins up the Shanty, runs the tests, then destroys the Shanty"
+    desc "test [--verbose, -v] [PROVIDER] [REVISION]", "Spins up the Shanty, runs the tests, then destroys the Shanty"
     long_desc <<-LONGDESC
-      `shanty test [--verbose, -v] [REVISION] [PROVIDER]` Will spin up a new VM
-      using the specified PROVIDER and run the given test steps against the
-      REVISION.
+      `shanty test [--verbose, -v] [PROVIDER] [REVISION]` will spin up a new
+      VM using the PROVIDER and run the given test steps against the REVISION.
 
       REVISION is optional, and if omitted will default to '#{DEFAULT_REVISION}'.
       \005PROVIDER is optional, and if omitted will use your configured default
