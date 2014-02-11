@@ -19,7 +19,7 @@ module Shanty
 
       def set_default_provider(provider)
         @provider = provider
-        template "templates/shanty/provider_config.yml.tt", "~/.shanty/provider_config.yml"
+        template "templates/shanty/global_config.yml.tt", "~/.shanty/global_config.yml"
       end
 
       def create_project_config(language)

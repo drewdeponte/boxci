@@ -1,6 +1,6 @@
 require 'shanty/version'
 require 'shanty/project_config'
-require 'shanty/provider_config'
+require 'shanty/global_config'
 require 'shanty/initializer'
 require 'shanty/builder'
 require 'shanty/dependency_checker'
@@ -28,19 +28,19 @@ module Shanty
     end
   end
 
-  def self.global_provider_config
-    if @global_provider_config
-      return @global_provider_config
+  def self.global_config
+    if @global_config
+      return @global_config
     else
-      @global_provider_config = Shanty::ProviderConfig.new
-      @global_provider_config.load
-      return @global_provider_config
+      @global_config = Shanty::GlobalConfig.new
+      @global_config.load
+      return @global_config
     end
   end
 
   def self.default_provider
-    if global_provider_config.default_provider
-      return global_provider_config.default_provider
+    if global_config.default_provider
+      return global_config.default_provider
     else
       return ::Shanty::CLI::DEFAULT_PROVIDER
     end

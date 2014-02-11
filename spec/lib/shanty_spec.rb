@@ -42,43 +42,43 @@ describe Shanty do
     end
   end
 
-  describe ".global_provider_config" do
+  describe ".global_config" do
     context "when provider config instance has already been cached" do
       it "returns the cached provider config instance" do
-        global_provider_config_double = double
-        subject.instance_variable_set(:@global_provider_config, global_provider_config_double)
-        expect(subject.global_provider_config).to eq(global_provider_config_double)
+        global_config_double = double
+        subject.instance_variable_set(:@global_config, global_config_double)
+        expect(subject.global_config).to eq(global_config_double)
       end
     end
 
     context "when provider config instance has NOT been cached" do
       before do
-        subject.instance_variable_set(:@global_provider_config, nil)
+        subject.instance_variable_set(:@global_config, nil)
       end
 
       it "constructs a provider config instance" do
-        expect(Shanty::ProviderConfig).to receive(:new).and_return(double(:load => nil))
-        subject.global_provider_config
+        expect(Shanty::GlobalConfig).to receive(:new).and_return(double(:load => nil))
+        subject.global_config
       end
 
       it "caches the provider config instance in an instance variable" do
-        global_provider_config_double = double(:load => nil)
-        allow(Shanty::ProviderConfig).to receive(:new).and_return(global_provider_config_double)
-        subject.global_provider_config
-        expect(subject.instance_variable_get(:@global_provider_config)).to eq(global_provider_config_double)
+        global_config_double = double(:load => nil)
+        allow(Shanty::GlobalConfig).to receive(:new).and_return(global_config_double)
+        subject.global_config
+        expect(subject.instance_variable_get(:@global_config)).to eq(global_config_double)
       end
 
       it "loads the project config" do
-        global_provider_config_double = double
-        allow(Shanty::ProviderConfig).to receive(:new).and_return(global_provider_config_double)
-        expect(global_provider_config_double).to receive(:load)
-        subject.global_provider_config
+        global_config_double = double
+        allow(Shanty::GlobalConfig).to receive(:new).and_return(global_config_double)
+        expect(global_config_double).to receive(:load)
+        subject.global_config
       end
 
       it "returns the cached project config instance" do
-        global_provider_config_double = double(:load => nil)
-        allow(Shanty::ProviderConfig).to receive(:new).and_return(global_provider_config_double)
-        expect(subject.global_provider_config).to eq(global_provider_config_double)
+        global_config_double = double(:load => nil)
+        allow(Shanty::GlobalConfig).to receive(:new).and_return(global_config_double)
+        expect(subject.global_config).to eq(global_config_double)
       end
     end
   end
@@ -86,7 +86,7 @@ describe Shanty do
   describe ".default_provider" do
     context "when has a default provider" do
       before do
-        allow(subject).to receive(:global_provider_config).and_return(double(:default_provider => 'foo'))
+        allow(subject).to receive(:global_config).and_return(double(:default_provider => 'foo'))
       end
 
       it "returns the default provider" do
@@ -96,7 +96,7 @@ describe Shanty do
 
     context "when it does NOT have a default provider" do
       before do
-        allow(subject).to receive(:global_provider_config).and_return(double(:default_provider => nil))
+        allow(subject).to receive(:global_config).and_return(double(:default_provider => nil))
       end
 
       it "returns shanty hard coded default provider" do
