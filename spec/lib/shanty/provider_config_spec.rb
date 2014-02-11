@@ -23,4 +23,12 @@ describe Shanty::ProviderConfig do
       subject.load
     end
   end
+
+  describe "#default_provider" do
+    it "returns the default_provider from the config hash" do
+      allow(subject).to receive(:read_provider_config_hash).and_return({'default_provider' => 'hoopty'})
+      subject.load
+      expect(subject.default_provider).to eq('hoopty')
+    end
+  end
 end

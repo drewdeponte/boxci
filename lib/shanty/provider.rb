@@ -18,6 +18,10 @@ module Shanty
       def generate_provider_config
         raise "generate_provider_config must be implemented on Shanty::Provider classes"
       end
+
+      def config
+        raise "config must be implemented on Shanty::Provider classes"
+      end
     end
   end
 end
