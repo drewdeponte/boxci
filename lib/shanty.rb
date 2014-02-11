@@ -1,6 +1,7 @@
 require 'shanty/version'
 require 'shanty/project_config'
 require 'shanty/global_config'
+require 'shanty/provider_config'
 require 'shanty/initializer'
 require 'shanty/builder'
 require 'shanty/dependency_checker'
