@@ -14,8 +14,7 @@ module Shanty
       end
 
       def create_provider_config(provider)
-        provider = Shanty::ProviderFactory.build(provider)
-        provider.generate_provider_config
+        template "templates/providers/#{provider}.yml.tt", "~/.shanty/providers/#{provider}.yml"
       end
 
       def set_default_provider(provider)

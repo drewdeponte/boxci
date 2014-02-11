@@ -28,17 +28,9 @@ describe Shanty::Initializer do
   end
 
   describe "#create_provider_config" do
-    it "builds a provider config object" do
-      provider_double = double
-      expect(Shanty::ProviderFactory).to receive(:build).with(provider_double).and_return(double(:generate_provider_config => nil))
-      subject.create_provider_config(provider_double)
-    end
-
-    it "generates the provider config" do
-      provider_obj_double = double
-      allow(Shanty::ProviderFactory).to receive(:build).and_return(provider_obj_double)
-      expect(provider_obj_double).to receive(:generate_provider_config)
-      subject.create_provider_config(double)
+    it "renders the provider specific config" do
+      expect(subject).to receive(:template).with("templates/providers/foo.yml.tt", "~/.shanty/providers/foo.yml")
+      subject.create_provider_config('foo')
     end
   end
 
