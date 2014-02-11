@@ -27,6 +27,17 @@ module Shanty
     end
   end
 
+  def self.default_provider
+    provider_config_path = File.join(ENV['HOME'], '/.shanty/provider_config.yml')
+    provider_config = YAML::load_file(provider_config_path)
+    default_provider = provider_config['default_provider']
+    if default_provider
+      return default_provider
+    else
+      return ::Shanty::CLI::DEFAULT_PROVIDER
+    end
+  end
+
   def self.provider_config
     if @provider_config
       return @provider_config

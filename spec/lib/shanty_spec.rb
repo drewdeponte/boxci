@@ -42,6 +42,48 @@ describe Shanty do
     end
   end
 
+  describe ".default_provider" do
+    it "builds the provider config path" do
+      allow(YAML).to receive(:load_file).and_return({})
+      expect(File).to receive(:join).with(ENV['HOME'], '/.shanty/provider_config.yml')
+      subject.default_provider
+    end
+
+    it "loads the provider config yaml" do
+      provider_config_path = double
+      allow(File).to receive(:join).and_return(provider_config_path)
+      expect(YAML).to receive(:load_file).with(provider_config_path).and_return({})
+      subject.default_provider
+    end
+
+    it "attempts to get the default provider from the provider config" do
+      config_double = double
+      allow(YAML).to receive(:load_file).and_return(config_double)
+      expect(config_double).to receive(:[]).with('default_provider')
+      subject.default_provider
+    end
+
+    context "when has a default provider" do
+      before do
+        allow(YAML).to receive(:load_file).and_return({ 'default_provider' => 'foo' })
+      end
+
+      it "returns the default provider" do
+        expect(subject.default_provider).to eq('foo')
+      end
+    end
+
+    context "when it does NOT have a default provider" do
+      before do
+        allow(YAML).to receive(:load_file).and_return({})
+      end
+
+      it "returns shanty hard coded default provider" do
+        expect(subject.default_provider).to eq(::Shanty::CLI::DEFAULT_PROVIDER)
+      end
+    end
+  end
+
   describe ".provider_config" do
     context "when provider config instance has already been cached" do
       it "returns the cached provider config instance" do
