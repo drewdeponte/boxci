@@ -8,6 +8,10 @@ require 'shanty/tester'
 require 'shanty/language_factory'
 require 'shanty/language'
 require 'shanty/languages/ruby'
+require 'shanty/provider'
+require 'shanty/providers/aws'
+require 'shanty/providers/openstack'
+require 'shanty/cli'
 
 module Shanty
   class MissingDependency < StandardError; end
