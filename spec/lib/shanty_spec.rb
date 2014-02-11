@@ -83,6 +83,47 @@ describe Shanty do
     end
   end
 
+  describe ".provider_config" do
+    context "when the provider config instance has already been cached" do
+      it "returns the cached provider config instance" do
+        provider_config = double("provider config")
+        subject.instance_variable_set(:@provider_config, provider_config)
+        expect(subject.global_config).to eq(provider_config_double)
+      end
+    end
+
+    context "when the provider config instance has NOT been cached" do
+      before do
+        subject.instance_variable_set(:@provider_config, nil)
+      end
+
+      it "constructs a provider config instance" do
+        expect(Shanty::ProviderConfig).to receive(:new).and_return(double(:load => nil))
+        subject.provider_config
+      end
+
+      it "caches the provider config instance in an instance variable" do
+        provider_config_double = double(:load => nil)
+        allow(Shanty::ProviderConfig).to receive(:new).and_return(provider_config_double)
+        subject.provider_config
+        expect(subject.instance_variable_get(:@provider_config)).to eq(provider_config_double)
+      end
+
+      it "loads the provider config" do
+        provider_config_double = double
+        allow(Shanty::ProviderConfig).to receive(:new).and_return(provider_config_double)
+        expect(provider_config_double).to receive(:load)
+        subject.provider_config
+      end
+
+      it "returns the cached provider config instance" do
+        provider_config_double = double(:load => nil)
+        allow(Shanty::ProviderConfig).to receive(:new).and_return(provider_config_double)
+        expect(subject.provider_config).to eq(provider_config_double)
+      end
+    end
+  end
+
   describe ".default_provider" do
     context "when has a default provider" do
       before do

@@ -41,8 +41,8 @@ describe Shanty::Initializer do
       expect(subject.instance_variable_get(:@provider)).to eq('aws')
     end
 
-    it "creates the provider_config.yml setting the default provider" do
-      expect(subject).to receive(:template).with("templates/shanty/provider_config.yml.tt", "~/.shanty/provider_config.yml")
+    it "creates the global_config.yml setting the default provider" do
+      expect(subject).to receive(:template).with("templates/shanty/global_config.yml.tt", "~/.shanty/global_config.yml")
       subject.set_default_provider('aws')
     end
   end

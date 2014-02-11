@@ -17,6 +17,7 @@ module Shanty
         template "templates/providers/#{provider}.yml.tt", "~/.shanty/providers/#{provider}.yml"
       end
 
+      # TODO: Change this name to create_global_config
       def set_default_provider(provider)
         @provider = provider
         template "templates/shanty/global_config.yml.tt", "~/.shanty/global_config.yml"

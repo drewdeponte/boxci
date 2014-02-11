@@ -38,6 +38,16 @@ module Shanty
     end
   end
 
+  def self.provider_config(provider)
+    if @provider_config
+      return @provider_config
+    else
+      @provider_config = Shanty::ProviderConfig.new(provider)
+      @provider_config.load
+      return @provider_config
+    end
+  end
+
   def self.default_provider
     if global_config.default_provider
       return global_config.default_provider
