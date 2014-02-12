@@ -11,7 +11,7 @@ module Shanty
               run "git submodule update --init"
             end
           end
-          template "templates/languages/#{Shanty.project_config.language}/main.tt", File.join(Shanty.project_path, "puppet/manifests/main.pp")
+          template "templates/languages/#{Shanty.project_config.language}/main.pp", File.join(Shanty.project_path, "puppet/manifests/main.pp")
         end
       end
     end

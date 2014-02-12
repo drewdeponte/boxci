@@ -7,3 +7,5 @@ image: the_image_identifier
 endpoint: the_openstack_tokens_endpoint
 network: the_openstack_network_identifier
 domain_name: the_base_domain_for_server_names
+vagrant_user: the_user_name
+vagrant_home: the_users_home_directory
