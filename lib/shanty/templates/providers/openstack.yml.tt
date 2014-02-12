@@ -1,4 +1,9 @@
-username: rl.user
-password: rl.password
+username: the_openstack_username
+password: the_openstack_password
 private_key_path: "~/.ssh/id_rsa"
-key_pair: rl.keypair
+key_pair: the_openstack_keypair
+flavor: the_node_flavor
+image: the_image_identifier
+endpoint: the_openstack_tokens_endpoint
+network: the_openstack_network_identifier
+domain_name: the_base_domain_for_server_names

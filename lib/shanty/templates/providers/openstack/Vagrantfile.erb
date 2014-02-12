@@ -5,15 +5,15 @@ Vagrant.configure("2") do |config|
   config.ssh.username = "ubuntu"
 
   config.vm.provider :openstack do |os|
-    os.server_name = "cib_<%= rand(10000) %>.dev.wh.reachlocal.com"
+    os.server_name = "shanty_<%= rand(10000) -%>.<%= @provider_config.fetch("domain_name") -%>"
     os.username = "<%= @provider_config.fetch("username") %>"
     os.api_key  = "<%= @provider_config.fetch("password") %>"
-    os.flavor   = /m1.small/
-    os.image    = /Ubuntu 12/
-    os.endpoint = "http://rlpc-control.dev.wh.reachlocal.com:5000/v2.0/tokens"
+    os.flavor   = Regexp.new('<%= @provider_config.fetch("flavor") -%>')
+    os.image    = Regexp.new('<%= @provider_config.fetch("image") -%>')
+    os.endpoint = "<%= @provider_config.fetch('endpoint') -%>"
     os.keypair_name = "<%= @provider_config.fetch("key_pair") %>"
     os.metadata = {}
-    os.network = "DEV_APP"
+    os.network = "<%= @provider_config.fetch('network') -%>"
   end
 
   config.vm.provision :puppet do |puppet|
