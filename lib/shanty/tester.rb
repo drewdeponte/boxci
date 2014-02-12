@@ -6,24 +6,13 @@ module Shanty
   class Tester < Thor
     include Thor::Actions
 
-    attr_accessor :gem_path, :config, :report_location, :project_folder
-
-    PROVIDERS = {
-      "openstack" => {
-        :plugin => "vagrant-openstack-plugin",
-        :dummy_box_url => "https://github.com/cloudbau/vagrant-openstack-plugin/raw/master/dummy.box"
-      },
-      "aws" => {
-        :plugin => "vagrant-aws",
-        :dummy_box_url => "https://github.com/mitchellh/vagrant-aws/raw/master/dummy.box"
-      }
-    }
+    source_root(File.dirname(__FILE__))
 
     no_commands do
       def test(options)
         depencency_checker = Shanty::DependencyChecker.new
         depencency_checker.verify_all
-        initial_setup(options)
+        initial_config(options)
 
         create_project_folder
         create_project_archive
@@ -44,33 +33,24 @@ module Shanty
         cleanup
       end
 
-      def initial_setup(options)
+      def initial_config(options)
         @gem_path = File.expand_path(File.dirname(__FILE__) + "/../..")
         @report_location = File.join(Shanty.project_path, "reports")
-
-        load_config_files
-        @config.merge!(options)
+        @puppet_path = File.join(Shanty.project_path, "puppet")
+        @project_uid = "#{rand(1000..9000)}-#{rand(1000..9000)}-#{rand(1000..9000)}-#{rand(1000..9000)}"
+        @project_folder = File.join(File.expand_path(ENV['HOME']), '.shanty', @project_uid)
+        @options = options
+        @provider_config = Shanty.provider_config(provider)
+        @project_config = Shanty.project_config
+        @provider_object = Shanty::ProviderFactory.build(provider)
       end
 
-      def revision
-        @config["revision"]
+      def provider
+        @options["provider"]
       end
 
       def verbose?
-        @config["verbose"] == true
-      end
-
-      def load_config_files
-        # Load the shanty.yml file from the root of the clone of the project
-        config_file = File.join(Shanty.project_path, "shanty.yml")
-        @config = YAML::load_file(config_file)
-
-        # Load the ~/.shanty/provider_config.yml
-        @provider_config = YAML::load_file(File.join(File.expand_path(ENV['HOME']), '.shanty', "cloud_provider_config.yml"))
-        @config[@config["provider"]] = @provider_config[@config["provider"]].merge(@config[@config["provider"]] || {})
-        @config['puppet_path'] = File.join(Shanty.project_path, "puppet")
-
-        @project_folder = File.join(File.expand_path(ENV['HOME']), '.shanty', "#{@config['project_name']}-#{revision}")
+        @options["verbose"] == true
       end
 
       def create_project_folder
@@ -79,32 +59,32 @@ module Shanty
 
       def create_project_archive
         inside Shanty.project_path do
-          run "git checkout #{revision}", :verbose => verbose?
+          run "git checkout #{@options["revision"]}", :verbose => verbose?
           run "git submodule update --init", :verbose => verbose?
           run "tar cf #{File.join(@project_folder, "project.tar")} --exclude .git --exclude \"*.log\" --exclude node_modules .", :verbose => verbose?
         end
       end
 
       def write_vagrant_file
-        erb_template = File.join("templates", "providers", @config["provider"], "Vagrantfile.erb")
+        erb_template = File.join("templates", "providers", provider, "Vagrantfile.erb")
         destination = File.join(@project_folder, "Vagrantfile")
 
         template erb_template, destination, :verbose => verbose?
       end
 
       def write_test_runner
-        erb_template = File.join("templates", "languages", @config["language"], "test_runner.sh.erb")
+        erb_template = File.join("templates", "languages", Shanty.project_config.language, "test_runner.sh.erb")
         destination = File.join(@project_folder, "test_runner.sh")
         template erb_template, destination, :verbose => verbose?
       end
 
       def install_vagrant_plugin
         inside @project_folder do
-          plugin = PROVIDERS[@config["provider"]][:plugin]
+          plugin = @provider_object.plugin
           # check for vagrant plugin
           if !system("vagrant plugin list | grep -q #{plugin}")
             # if vagrant plugin is missing
-            say "You are missing the Vagrant plugin for #{@config["provider"]}", :yellow
+            say "You are missing the Vagrant plugin for #{provider}", :yellow
             # ask user if it's ok to install for them
             if yes?("Would you like to install it now?")
               run "vagrant plugin install #{plugin}", :verbose => verbose?
@@ -116,19 +96,19 @@ module Shanty
       end
 
       def add_provider_box
-        if @config["vm_box_url"]
-          if run "curl --output /dev/null --silent --head --fail #{@config["vm_box_url"]}"
+        dummy_box_url = @provider_object.dummy_box_url
+        if dummy_box_url
+          if run "curl --output /dev/null --silent --head --fail #{dummy_box_url}"
             say "Using specified VM Box URL", :green
           else
-            say "Could not resolve the Box URL: #{@config["vm_box_url"]}", :red
+            say "Could not resolve the Box URL: #{dummy_box_url}", :red
           end
         else
           inside @project_folder do
-            dummy_box_url = PROVIDERS[@config["provider"]][:dummy_box_url]
             # check for box
-            if !system("vagrant box list | grep dummy | grep -q \"(#{@config["provider"]})\"")
+            if !system("vagrant box list | grep dummy | grep -q \"(#{provider})\"")
               # if box is missing
-              say "No box found for #{@config["provider"]}, installing now...", :blue
+              say "No box found for #{provider}, installing now...", :blue
               run "vagrant box add dummy #{dummy_box_url}", :verbose => verbose?
             else # if vagrant plugin is found
               say "Provider box found", :green
@@ -139,7 +119,7 @@ module Shanty
 
       def spin_up_box
         inside @project_folder do
-          run "vagrant up --no-provision --provider #{@config["provider"]}", :verbose => verbose?
+          run "vagrant up --no-provision --provider #{provider}", :verbose => verbose?
         end
       end
 
@@ -153,9 +133,9 @@ module Shanty
         say "Opening SSH tunnel into the box...", :blue if verbose?
         Net::SSH.start("default", "ubuntu", {:config => File.join(@project_folder, "ssh-config.local")}) do |ssh|
           say "Copying the project TAR to the box, and unpacking...", :blue if verbose?
-          ssh.exec! "mkdir /vagrant/#{@config['project_name']}"
-          ssh.exec! "tar xf /vagrant/project.tar -C /vagrant/#{@config['project_name']}"
-          ssh.exec! "cp /vagrant/#{@config["project_name"]}/.ruby-version /vagrant"
+          ssh.exec! "mkdir /vagrant/#{@project_uid}"
+          ssh.exec! "tar xf /vagrant/project.tar -C /vagrant/#{@project_uid}"
+          ssh.exec! "cp /vagrant/#{@project_uid}/.ruby-version /vagrant"
           puppet = ssh.exec! "which puppet"
           unless puppet
             say "Running: sudo apt-get --yes update", :blue if verbose?
@@ -176,9 +156,10 @@ module Shanty
       def create_reports_directory
         say "Creating the reports directory on the box...", :blue if verbose?
         Net::SSH.start("default", "ubuntu", {:config => File.join(@project_folder, "ssh-config.local")}) do |ssh|
-          report_exts = @config['report_file_ext'] || ['xml']
+          # TODO: Make this configurable, ex: report_exts = @config['report_file_ext'] || ['xml']
+          report_exts = ['xml']
           report_exts.each do |ext|
-            ssh.exec!  "mkdir -p /vagrant/#{@config['project_name']}/reports/#{ext}"
+            ssh.exec!  "mkdir -p /vagrant/#{@project_uid}/reports/#{ext}"
           end
         end
       end
@@ -205,7 +186,7 @@ module Shanty
           # say "Removing old reports...", :blue if verbose?
           Dir["#{@report_location}/*.*"].each { |file| FileUtils.rm(file) }
           say "Downloading the reports...", :blue if verbose?
-          ssh.scp.download! "/vagrant/#{@config['project_name']}/reports/*", @report_location, :recursive => true
+          ssh.scp.download! "/vagrant/#{@project_uid}/reports/*", @report_location, :recursive => true
         end
       end
 

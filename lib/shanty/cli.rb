@@ -5,13 +5,16 @@ module Shanty
     DEFAULT_PROVIDER='aws'
     DEFAULT_REVISION='HEAD'
 
-    desc "init <language> [PROVIDER]", "Initializes Shanty in the present working directory"
+    desc "init <LANGUAGE> [PROVIDER]", "Initializes Shanty in the present working directory"
     long_desc <<-LONGDESC
-      `shanty init <language> [PROVIDER]` will create a .shanty directory in
+      `shanty init <LANGUAGE> [PROVIDER]` will create a .shanty directory in
       your user's home directory, create a provider specific config (ex:
       ~/.shanty/providers/aws.yml), set the default provider in
       (~/.shanty/provider_config.yml), and create a project config (.shanty.yml)
       in the current working directory.
+
+      LANGUAGE is required, it is the language of your project, see supported
+      languages below.
 
       PROVIDER is optional, and if omitted will default to '#{DEFAULT_PROVIDER}'.
 
@@ -33,21 +36,24 @@ module Shanty
       builder.build
     end
 
-    desc "test [--verbose, -v] [PROVIDER] [REVISION]", "Spins up the Shanty, runs the tests, then destroys the Shanty"
+    desc "test [-v] [-p PROVIDER] [REVISION]", "Spins up the Shanty, runs the tests, then destroys the Shanty"
     long_desc <<-LONGDESC
-      `shanty test [--verbose, -v] [PROVIDER] [REVISION]` will spin up a new
-      VM using the PROVIDER and run the given test steps against the REVISION.
+      `shanty test [-v] [-p PROVIDER] [REVISION]` will spin up a new VM using
+      the PROVIDER and run the given test steps against the REVISION.
+
+      --verbose (or -v) is optional. If added, there will be much more output
+      a lot of debugging information, as well as explain exactly which commands
+      are being run.
+
+      --provider (-p) is optional. If omitted, it will use your configured
+      default provider (#{Shanty.default_provider}). If you don't have a
+      default provider configured it will default to '#{DEFAULT_PROVIDER}'.
 
       REVISION is optional, and if omitted will default to '#{DEFAULT_REVISION}'.
-      \005PROVIDER is optional, and if omitted will use your configured default
-      provider. If you don't have deafult provider configured it will default to
-      '#{DEFAULT_PROVIDER}'.
-
-      Passing the option --verbose will output a lot of debugging information, as
-      well as explain exactly which commands are being run.
     LONGDESC
     option :verbose, :type => :boolean, :aliases => "-v"
-    def test(provider=DEFAULT_PROVIDER, revision=DEFAULT_REVISION)
+    option :provider, :type => :string, :aliases => "-p", :default => Shanty.default_provider
+    def test(revision=DEFAULT_REVISION)
       tester = Shanty::Tester.new
       tester.test(options.merge({"revision" => revision}))
     end

@@ -31,4 +31,33 @@ describe Shanty::ProjectConfig do
       expect(subject.language).to eq('java')
     end
   end
+
+  describe "#puppet_facts" do
+    it "returns the puppet facters from the config hash" do
+      facters = {"test_key" => "test_value"}
+      subject.instance_variable_set(:@project_config, {"puppet_facts" => facters})
+      expect(subject.puppet_facts).to eq(facters)
+    end
+  end
+
+  describe "#hook_as_array" do
+    context "when the value is an array" do
+      it "returns the value"
+    end
+
+    context "when not the value is not an array" do
+      it "returns the value as the only item in an array"
+    end
+  end
+
+  it "add all the tests for the script hooks!" do
+    pending
+    # before_install
+    # install
+    # before_script
+    # script
+    # after_failure
+    # after_success
+    # after_script
+  end
 end

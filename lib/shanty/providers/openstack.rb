@@ -9,6 +9,14 @@ module Shanty
       no_commands do
         def generate_provider_vagrantfile
         end
+
+        def plugin
+          PLUGIN[:name]
+        end
+
+        def dummy_box_url
+          PLUGIN[:dummy_box_url]
+        end
       end
     end
   end

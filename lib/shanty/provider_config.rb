@@ -9,6 +9,10 @@ module Shanty
       @provider_config.merge!(read_provider_config_hash)
     end
 
+    def fetch(key)
+      @provider_config.fetch(key.to_s)
+    end
+
     private
 
     def read_provider_config_hash

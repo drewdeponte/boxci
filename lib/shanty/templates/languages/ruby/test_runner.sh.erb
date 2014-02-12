@@ -1,13 +1,22 @@
 #!/bin/bash --login
 
 export RAILS_ENV=test
-export PROJECT_DIR="/vagrant/<%= @config['project_name'] %>"
-export CI_REPORTS="/vagrant/<%= @config['project_name'] %>/reports"
+export PROJECT_DIR="/vagrant/<%= @project_uid %>"
+export CI_REPORTS="/vagrant/<%= @project_uid %>/reports"
 
 ssh -oStrictHostKeyChecking=no github.com
 mkdir $PROJECT_DIR
 cd $PROJECT_DIR 
 tar xf ../project.tar
+
+# before_install
+<% if !@project_config.before_install.empty? %>
+  <% @project_config.before_install.each do |test_step| %>
+    echo "Running before_install step '<%= test_step %>'"
+    <%= test_step %>
+  <% end %>
+<% end %>
+
 rvm autolibs packages
 sudo /usr/local/rvm/bin/rvm requirements
 rvm install --create $(cat .ruby-version)
@@ -16,22 +25,46 @@ gem install bundler
 if ! grep -q ci_reporter Gemfile; then
   echo "gem 'ci_reporter'" >> Gemfile
 fi
+
+# install
+<% if !@project_config.install.empty? %>
+  <% @project_config.install.each do |test_step| %>
+    echo "Running install step '<%= test_step %>'"
+    <%= test_step %>
+  <% end %>
+<% end %>
 bundle install --without assets development
 
-<% if @config["project_setup"] %>
-  <% @config["project_setup"].each do |step| %>
-    echo "Running step '<%= step %>'"
+# before_script
+<% if !@project_config.before_script.empty? %>
+  <% @project_config.before_script.each do |step| %>
+    echo "Running before_script step '<%= step %>'"
     <%= step %>
   <% end %>
 <% end %>
 
 T=$(date +%s)
 cd $PROJECT_DIR
-<% if @config["tests_to_run"] %>
-  <% @config["tests_to_run"].each do |test_step| %>
-    echo "Running test step '<%= test_step %>'"
+# script
+<% if !@project_config.script.empty? %>
+  <% @project_config.script.each do |test_step| %>
+    echo "Running script step '<%= test_step %>'"
+    <%= test_step %>
+  <% end %>
+<% else %>
+  echo "Running 'bundle exec rake'"
+  bundle exec rake
+<% end %>
+
+# after_success
+# after_failure
+
+T2=$(date +%s)
+find . -mmin $(((T-T2)/60-1)) -name "*.xml" -exec mv {} $CI_REPORTS \; 
+
+<% if !@project_config.after_script.empty? %>
+  <% @project_config.after_script.each do |test_step| %>
+    echo "Running after_script step '<%= test_step %>'"
     <%= test_step %>
   <% end %>
 <% end %>
-T2=$(date +%s)
-find . -mmin $(((T-T2)/60-1)) -name "*.xml" -exec mv {} $CI_REPORTS \; 

@@ -13,7 +13,6 @@ require 'shanty/provider_factory'
 require 'shanty/provider'
 require 'shanty/providers/aws'
 require 'shanty/providers/openstack'
-require 'shanty/cli'
 
 module Shanty
   class MissingDependency < StandardError; end
@@ -61,3 +60,6 @@ module Shanty
     @project_path ||= File.expand_path(%x(pwd)).strip
   end
 end
+
+# TODO: Restructure to prevent this from needing to be here.
+require 'shanty/cli'
