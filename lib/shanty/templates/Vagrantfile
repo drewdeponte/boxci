@@ -10,11 +10,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   config.vm.provision "puppet" do |puppet|
     # puppet.options = "--verbose --debug"
-    # puppet.facter = {
-    #   "service"      => "capture",
-    #   "vagrant_user" => "vagrant",
-    #   "vagrant_home" => "/home/vagrant"
-    # }
     puppet.module_path = "puppet/modules"
     puppet.manifests_path = "puppet/manifests"
     puppet.manifest_file  = "main.pp"
