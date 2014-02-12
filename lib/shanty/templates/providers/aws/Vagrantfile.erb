@@ -16,6 +16,9 @@ Vagrant.configure("2") do |config|
 
   config.vm.provision :puppet do |puppet|
     puppet.facter = { 
+      <% @project_config.puppet_facts.each do |k, v| %>
+        "<%= k %>" => "<%= v %>",
+      <% end %>
       "role" => "ci", 
       "operationsystem" => "debian",
       "vagrant_user" => "ubuntu", 
