@@ -8,6 +8,10 @@ module Shanty
       @project_config.merge! read_project_config_hash
     end
 
+    def rbenv
+      @project_config['rbenv']
+    end
+
     def language
       @project_config['language']
     end
