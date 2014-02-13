@@ -33,74 +33,153 @@ describe Shanty::ProjectConfig do
   end
 
   describe "#puppet_facts" do
-    it "returns the puppet facters from the config hash" do
-      facters = {"test_key" => "test_value"}
-      subject.instance_variable_set(:@project_config, {"puppet_facts" => facters})
-      expect(subject.puppet_facts).to eq(facters)
+    context "when puppet facts are provided in the project config" do
+      it "returns the puppet facts from the config hash" do
+        facters = {"test_key" => "test_value"}
+        subject.instance_variable_set(:@project_config, {"puppet_facts" => facters})
+        expect(subject.puppet_facts).to eq(facters)
+      end
+    end
+    
+    context "when puppet facts are NOT provided in the project config" do
+      it "returns an empty array" do
+        subject.instance_variable_set(:@project_config, {})
+        expect(subject.puppet_facts).to eq([])
+      end
     end
   end
 
   describe "#before_install" do
-    it "grabs the named hook as an array" do
-      expect(subject).to receive(:hook_as_array).with('before_install')
-      subject.before_install
+    context "when before_install is provided in the project config" do
+      it "grabs the named hook as an array" do
+        subject.instance_variable_set(:@project_config, { 'before_install' => double })
+        expect(subject).to receive(:option_as_array).with('before_install')
+        subject.before_install
+      end
+    end
+
+    context "when before_install is NOT provided in the project config" do
+      it "returns an empty array" do
+        subject.instance_variable_set(:@project_config, {})
+        expect(subject.before_install).to eq([])
+      end
     end
   end
 
   describe "#install" do
-    it "grabs the named hook as an array" do
-      expect(subject).to receive(:hook_as_array).with('install')
-      subject.install
+    context "when install is provided in the project config" do
+      it "grabs the named hook as an array" do
+        subject.instance_variable_set(:@project_config, { 'install' => double })
+        expect(subject).to receive(:option_as_array).with('install')
+        subject.install
+      end
+    end
+
+    context "when install is NOT provided in the project config" do
+      it "returns an empty array" do
+        subject.instance_variable_set(:@project_config, {})
+        expect(subject.install).to eq([])
+      end
     end
   end
 
   describe "#before_script" do
-    it "grabs the named hook as an array" do
-      expect(subject).to receive(:hook_as_array).with('before_script')
-      subject.before_script
+    context "when before_script is provided in the project config" do
+      it "grabs the named hook as an array" do
+        subject.instance_variable_set(:@project_config, { 'before_script' => double })
+        expect(subject).to receive(:option_as_array).with('before_script')
+        subject.before_script
+      end
+    end
+
+    context "when before_script is NOT provided in the project config" do
+      it "returns an empty array" do
+        subject.instance_variable_set(:@project_config, {})
+        expect(subject.before_script).to eq([])
+      end
     end
   end
 
   describe "#script" do
-    it "grabs the named hook as an array" do
-      expect(subject).to receive(:hook_as_array).with('script')
-      subject.script
+    context "when script is provided in the project config" do
+      it "grabs the named hook as an array" do
+        subject.instance_variable_set(:@project_config, { 'script' => double })
+        expect(subject).to receive(:option_as_array).with('script')
+        subject.script
+      end
+    end
+
+    context "when script is NOT provided in the project config" do
+      it "returns an empty array" do
+        subject.instance_variable_set(:@project_config, {})
+        expect(subject.script).to eq([])
+      end
     end
   end
 
   describe "#after_failure" do
-    it "grabs the named hook as an array" do
-      expect(subject).to receive(:hook_as_array).with('after_failure')
-      subject.after_failure
+    context "when after_failure is provided in the project config" do
+      it "grabs the named hook as an array" do
+        subject.instance_variable_set(:@project_config, { 'after_failure' => double })
+        expect(subject).to receive(:option_as_array).with('after_failure')
+        subject.after_failure
+      end
+    end
+
+    context "when after_failure is NOT provided in the project config" do
+      it "returns an empty array" do
+        subject.instance_variable_set(:@project_config, {})
+        expect(subject.after_failure).to eq([])
+      end
     end
   end
 
   describe "#after_success" do
-    it "grabs the named hook as an array" do
-      expect(subject).to receive(:hook_as_array).with('after_success')
-      subject.after_success
+    context "when after_success is provided in the project config" do
+      it "grabs the named hook as an array" do
+        subject.instance_variable_set(:@project_config, { 'after_success' => double })
+        expect(subject).to receive(:option_as_array).with('after_success')
+        subject.after_success
+      end
+    end
+
+    context "when after_success is NOT provided in the project config" do
+      it "returns an empty array" do
+        subject.instance_variable_set(:@project_config, {})
+        expect(subject.after_success).to eq([])
+      end
     end
   end
 
   describe "#after_script" do
-    it "grabs the named hook as an array" do
-      expect(subject).to receive(:hook_as_array).with('after_script')
-      subject.after_script
+    context "when after_script is provided in the project config" do
+      it "grabs the named hook as an array" do
+        subject.instance_variable_set(:@project_config, { 'after_script' => double })
+        expect(subject).to receive(:option_as_array).with('after_script')
+        subject.after_script
+      end
+    end
+
+    context "when after_script is NOT provided in the project config" do
+      it "returns an empty array" do
+        subject.instance_variable_set(:@project_config, {})
+        expect(subject.after_script).to eq([])
+      end
     end
   end
 
-  describe "#hook_as_array" do
+  describe "#option_as_array" do
     context "when the value is an array" do
       it "returns the value" do
         subject.instance_variable_set(:@project_config, { 'foo' => [1, 2, 3] })
-        expect(subject.send(:hook_as_array, 'foo')).to eq([1, 2, 3])
+        expect(subject.send(:option_as_array, 'foo')).to eq([1, 2, 3])
       end
     end
 
     context "when not the value is not an array" do
       it "returns the value as the only item in an array" do
         subject.instance_variable_set(:@project_config, { 'foo' => 1 })
-        expect(subject.send(:hook_as_array, 'foo')).to eq([1])
+        expect(subject.send(:option_as_array, 'foo')).to eq([1])
       end
     end
   end

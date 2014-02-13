@@ -17,41 +17,49 @@ module Shanty
     end
 
     def puppet_facts
+      return [] unless @project_config['puppet_facts']
       @project_config['puppet_facts']
     end
 
     # Test Runner Hooks
     def before_install
-      hook_as_array("before_install")
+      return [] unless @project_config['before_install']
+      option_as_array("before_install")
     end
 
     def install
-      hook_as_array("install")
+      return [] unless @project_config['install']
+      option_as_array("install")
     end
 
     def before_script
-      hook_as_array("before_script")
+      return [] unless @project_config['before_script']
+      option_as_array("before_script")
     end
 
     def script
-      hook_as_array("script")
+      return [] unless @project_config['script']
+      option_as_array("script")
     end
 
     def after_failure
-      hook_as_array("after_failure")
+      return [] unless @project_config['after_failure']
+      option_as_array("after_failure")
     end
 
     def after_success
-      hook_as_array("after_success")
+      return [] unless @project_config['after_success']
+      option_as_array("after_success")
     end
 
     def after_script
-      hook_as_array("after_script")
+      return [] unless @project_config['after_script']
+      option_as_array("after_script")
     end
 
     private
 
-    def hook_as_array(key)
+    def option_as_array(key)
       if @project_config[key].is_a?(Array)
         @project_config[key]
       else
