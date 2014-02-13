@@ -1,0 +1,27 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+# Vagrantfile API/syntax version. Don't touch unless you know what you're doing!
+VAGRANTFILE_API_VERSION = "2"
+
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+  config.vm.box = "precise64"
+  config.vm.box_url = "http://files.vagrantup.com/precise64.box"
+
+  config.vm.provision :puppet do |puppet|
+    puppet.facter = {
+      <% @project_config.puppet_facts.each do |k, v| %>
+        "<%= k %>" => "<%= v %>",
+      <% end %>
+      "role" => "shanty",
+      "vagrant_user" => "<%= @provider_config.fetch("vagrant_user") %>",
+      "vagrant_home" => "<%= @provider_config.fetch("vagrant_home") %>"
+    }
+    puppet.module_path = "<%= @puppet_path %>/modules"
+    puppet.manifests_path = "<%= @puppet_path %>/manifests"
+    puppet.manifest_file = "main.pp"
+    <% if @options["verbose"] == true %>
+    puppet.options = "--verbose --debug"
+    <% end %>
+  end
+end

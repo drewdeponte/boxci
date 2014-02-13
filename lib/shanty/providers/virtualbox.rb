@@ -1,17 +1,14 @@
 module Shanty
   module Providers
-    class Openstack < ::Shanty::Provider
-      PLUGIN = {
-        name: "vagrant-openstack-plugin",
-        dummy_box_url: "https://github.com/cloudbau/vagrant-openstack-plugin/raw/master/dummy.box"
-      }
+    class Virtualbox < ::Shanty::Provider
+      PLUGIN = {}
 
       no_commands do
         def generate_provider_vagrantfile
         end
 
         def requires_plugin?
-          true
+          false
         end
 
         def plugin

@@ -10,16 +10,18 @@ module Shanty
 
     no_commands do
       def test(options)
-        depencency_checker = Shanty::DependencyChecker.new
-        depencency_checker.verify_all
+        # depencency_checker = Shanty::DependencyChecker.new
+        # depencency_checker.verify_all
         initial_config(options)
 
         create_project_folder
         create_project_archive
         write_vagrant_file
         write_test_runner
-        install_vagrant_plugin
-        add_provider_box
+        if @provider_object.requires_plugin?
+          install_vagrant_plugin
+          add_provider_box
+        end
         spin_up_box
         setup_ssh_config
         install_puppet_on_box
@@ -27,10 +29,10 @@ module Shanty
         create_reports_directory
         upload_test_runner
         run_tests
-        download_test_reports
+        # download_test_reports
         say "Finished!", :green
       ensure
-        cleanup
+        # cleanup
       end
 
       def initial_config(options)
@@ -38,7 +40,7 @@ module Shanty
         @report_location = File.join(Shanty.project_path, "reports")
         @puppet_path = File.join(Shanty.project_path, "puppet")
         @project_uid = "#{rand(1000..9000)}-#{rand(1000..9000)}-#{rand(1000..9000)}-#{rand(1000..9000)}"
-        @project_folder = File.join(File.expand_path(ENV['HOME']), '.shanty', @project_uid)
+        @project_workspace_folder = File.join(File.expand_path(ENV['HOME']), '.shanty', @project_uid)
         @options = options
         @provider_config = Shanty.provider_config(provider)
         @project_config = Shanty.project_config
@@ -54,32 +56,32 @@ module Shanty
       end
 
       def create_project_folder
-        empty_directory @project_folder, :verbose => verbose?
+        empty_directory @project_workspace_folder, :verbose => verbose?
       end
 
       def create_project_archive
         inside Shanty.project_path do
           run "git checkout #{@options["revision"]}", :verbose => verbose?
           run "git submodule update --init", :verbose => verbose?
-          run "tar cf #{File.join(@project_folder, "project.tar")} --exclude .git --exclude \"*.log\" --exclude node_modules .", :verbose => verbose?
+          run "tar cf #{File.join(@project_workspace_folder, "project.tar")} --exclude .git --exclude \"*.log\" --exclude node_modules .", :verbose => verbose?
         end
       end
 
       def write_vagrant_file
         erb_template = File.join("templates", "providers", provider, "Vagrantfile.erb")
-        destination = File.join(@project_folder, "Vagrantfile")
+        destination = File.join(@project_workspace_folder, "Vagrantfile")
 
         template erb_template, destination, :verbose => verbose?
       end
 
       def write_test_runner
         erb_template = File.join("templates", "languages", Shanty.project_config.language, "test_runner.sh.erb")
-        destination = File.join(@project_folder, "test_runner.sh")
+        destination = File.join(@project_workspace_folder, "test_runner.sh")
         template erb_template, destination, :verbose => verbose?
       end
 
       def install_vagrant_plugin
-        inside @project_folder do
+        inside @project_workspace_folder do
           plugin = @provider_object.plugin
           # check for vagrant plugin
           if !system("vagrant plugin list | grep -q #{plugin}")
@@ -104,7 +106,7 @@ module Shanty
             say "Could not resolve the Box URL: #{dummy_box_url}", :red
           end
         else
-          inside @project_folder do
+          inside @project_workspace_folder do
             # check for box
             if !system("vagrant box list | grep dummy | grep -q \"(#{provider})\"")
               # if box is missing
@@ -118,24 +120,20 @@ module Shanty
       end
 
       def spin_up_box
-        inside @project_folder do
+        inside @project_workspace_folder do
           run "vagrant up --no-provision --provider #{provider}", :verbose => verbose?
         end
       end
 
       def setup_ssh_config
-        inside @project_folder do
+        inside @project_workspace_folder do
           run "vagrant ssh-config > ssh-config.local", :verbose => verbose?
         end
       end
 
       def install_puppet_on_box
         say "Opening SSH tunnel into the box...", :blue if verbose?
-        Net::SSH.start("default", "ubuntu", {:config => File.join(@project_folder, "ssh-config.local")}) do |ssh|
-          say "Copying the project TAR to the box, and unpacking...", :blue if verbose?
-          ssh.exec! "mkdir /vagrant/#{@project_uid}"
-          ssh.exec! "tar xf /vagrant/project.tar -C /vagrant/#{@project_uid}"
-          ssh.exec! "cp /vagrant/#{@project_uid}/.ruby-version /vagrant"
+        Net::SSH.start("default", nil, {:config => File.join(@project_workspace_folder, "ssh-config.local")}) do |ssh|
           puppet = ssh.exec! "which puppet"
           unless puppet
             say "Running: sudo apt-get --yes update", :blue if verbose?
@@ -148,40 +146,40 @@ module Shanty
 
       def provision_box
         say "Provisioning the box with puppet...", :blue if verbose?
-        inside @project_folder do
+        inside @project_workspace_folder do
           run "vagrant provision", :verbose => verbose?
         end
       end
 
       def create_reports_directory
         say "Creating the reports directory on the box...", :blue if verbose?
-        Net::SSH.start("default", "ubuntu", {:config => File.join(@project_folder, "ssh-config.local")}) do |ssh|
+        Net::SSH.start("default", nil, {:config => File.join(@project_workspace_folder, "ssh-config.local")}) do |ssh|
           # TODO: Make this configurable, ex: report_exts = @config['report_file_ext'] || ['xml']
           report_exts = ['xml']
           report_exts.each do |ext|
-            ssh.exec!  "mkdir -p /vagrant/#{@project_uid}/reports/#{ext}"
+            ssh.exec!  "mkdir -p /vagrant/reports/#{ext}"
           end
         end
       end
 
       def upload_test_runner
-        Net::SSH.start("default", "ubuntu", {:config => File.join(@project_folder, "ssh-config.local")}) do |ssh|
+        Net::SSH.start("default", nil, {:config => File.join(@project_workspace_folder, "ssh-config.local")}) do |ssh|
           say "Uploading test_runner.sh to the box...", :blue if verbose?
-          ssh.scp.upload! File.join(@project_folder, "test_runner.sh"), "/vagrant/test_runner.sh"
+          ssh.scp.upload! File.join(@project_workspace_folder, "test_runner.sh"), "/vagrant/test_runner.sh"
           say "Running: chmod a+x /vagrant/test_runner.sh", :blue if verbose?
           puts ssh.exec! "chmod a+x /vagrant/test_runner.sh"
         end
       end
 
       def run_tests
-        Net::SSH.start("default", "ubuntu", {:config => File.join(@project_folder, "ssh-config.local")}) do |ssh|
+        Net::SSH.start("default", nil, {:config => File.join(@project_workspace_folder, "ssh-config.local")}) do |ssh|
           say "Running the test steps on the box...", :blue if verbose?
           puts ssh.exec! "/vagrant/test_runner.sh"
         end
       end
 
       def download_test_reports
-        Net::SSH.start("default", "ubuntu", {:config => File.join(@project_folder, "ssh-config.local")}) do |ssh|
+        Net::SSH.start("default", nil, {:config => File.join(@project_workspace_folder, "ssh-config.local")}) do |ssh|
           empty_directory @report_location, :verbose => verbose?
           # say "Removing old reports...", :blue if verbose?
           Dir["#{@report_location}/*.*"].each { |file| FileUtils.rm(file) }
@@ -191,11 +189,11 @@ module Shanty
       end
 
       def cleanup
-        if @project_folder && File.directory?(@project_folder)
+        if @project_workspace_folder && File.directory?(@project_workspace_folder)
           say "Cleaning up...", :blue
-          inside @project_folder do
+          inside @project_workspace_folder do
             run "vagrant destroy", :verbose => verbose?
-            remove_dir @project_folder, :verbose => verbose?
+            remove_dir @project_workspace_folder, :verbose => verbose?
           end
         end
       end

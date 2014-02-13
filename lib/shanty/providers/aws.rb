@@ -10,6 +10,10 @@ module Shanty
         def generate_provider_vagrantfile
         end
 
+        def requires_plugin?
+          true
+        end
+
         def plugin
           PLUGIN[:name]
         end
