@@ -19,6 +19,10 @@ module Shanty
         raise ::Shanty::PureVirtualMethod, "'generate_provider_vagrantfile' must be implemented on Shanty::Provider classes"
       end
 
+      def requires_plugin?
+        raise ::Shanty::PureVirtualMethod, "'requires_plugin?' must be implemented on Shanty::Provider classes"
+      end
+
       def plugin
         raise ::Shanty::PureVirtualMethod, "'plugin' must be implemented on Shanty::Provider classes"
       end
