@@ -13,3 +13,6 @@
   configs exist are have valid values.
 - Add --provider=aws as an optional option to the `shanty init` command. That
   way it can generate different provider_configs for the different providers.
+
+- Make jobs/steps output pipe to logs, suppress it on stdout, stderr.
+  - SCP those logs along with /reports
