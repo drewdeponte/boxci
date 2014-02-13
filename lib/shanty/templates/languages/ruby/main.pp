@@ -4,31 +4,23 @@ exec { "apt-update":
 
 Exec["apt-update"] -> Package <| |>
 
-user { 'shanty':
-  ensure      => 'present',
-  managehome  => true,
-  name        => 'shanty',
-  provider    => 'useradd',
-  system      => true,
-  comment     => 'shanty user',
-}
-
 package {
   "rbenv":
   ensure => present,
   require => Exec['apt-update'],
 }
 
-rbenv::install { 'shanty':
-  home => '/home/shanty',
-  require => [Package['rbenv'], User['shanty']],
+rbenv::install { $vagrant_user:
+  home => $vagrant_home,
+  require => [Package['rbenv']],
 }
+
 <% @project_config.rbenv.each do |ruby_version| -%>
 
-rbenv::compile { 'shanty/<%= ruby_version -%>':
-  user => 'shanty',
-  home => '/home/shanty',
+rbenv::compile { "$vagrant_user/<%= ruby_version -%>":
+  user => $vagrant_user,
+  home => $vagrant_home,
   ruby => '<%= ruby_version -%>',
-  require => Rbenv::Install['shanty'],
+  require => Rbenv::Install["$vagrant_user"],
 }
 <% end -%>
