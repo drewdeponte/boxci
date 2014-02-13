@@ -11,6 +11,7 @@ require 'shanty/language'
 require 'shanty/languages/ruby'
 require 'shanty/provider_factory'
 require 'shanty/provider'
+require 'shanty/providers/virtualbox'
 require 'shanty/providers/aws'
 require 'shanty/providers/openstack'
 
