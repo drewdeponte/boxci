@@ -31,13 +31,10 @@ fi
 
     # make sure bundler is installed for that ruby version
     echo "Installing bundler in ruby <%= ruby_version -%>"
-    echo "DREW: about to gem install bundler"
     gem install bundler 
-    echo "DREW: installed bundler"
+    rbenv rehash
     
-    echo "DREW: about to cd into the project"
     cd $PROJECT_DIR
-    echo "DREW: cd'd into the project directory"
     # install
     <% if !@project_config.install.empty? %>
       <% @project_config.install.each do |test_step| %>
@@ -45,9 +42,8 @@ fi
         <%= test_step %>
       <% end %>
     <% end %>
-    echo "DREW: about to bundle install"
     bundle install --without assets production
-    echo "DREW: bundle installed"
+    rbenv rehash
 
     cd $PROJECT_DIR
     # before_script
