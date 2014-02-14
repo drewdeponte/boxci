@@ -14,6 +14,11 @@ require 'shanty/provider'
 require 'shanty/providers/virtualbox'
 require 'shanty/providers/aws'
 require 'shanty/providers/openstack'
+require 'shanty/config_permutation'
+require 'shanty/config_permutation_component'
+require 'shanty/config_permutation_component_factory'
+require 'shanty/config_permutation_components/rbenv'
+require 'shanty/test_runner'
 
 module Shanty
   class MissingDependency < StandardError; end

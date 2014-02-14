@@ -75,9 +75,11 @@ module Shanty
       end
 
       def write_test_runner
-        erb_template = File.join("templates", "languages", Shanty.project_config.language, "test_runner.sh.erb")
         destination = File.join(@project_workspace_folder, "test_runner.sh")
-        template erb_template, destination, :verbose => verbose?
+        test_runner = Shanty::TestRunner.new(Shanty::LanguageFactory.build(Shanty.project_config.language))
+        File.open(destination, 'w+') do |f|
+          f.write(test_runner.generate_script)
+        end
       end
 
       def install_vagrant_plugin

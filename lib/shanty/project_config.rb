@@ -57,6 +57,19 @@ module Shanty
       option_as_array("after_script")
     end
 
+    def permutations
+      # permutations_of_components = [rbenv_components].inject(&:product).map(&:flatten)
+      if rbenv.nil? || rbenv.empty?
+        return nil
+      else
+        perms = []
+        rbenv.each do |ver|
+          perms << Shanty::ConfigPermutation.new([Shanty::ConfigPermutationComponentFactory.build('rbenv', ver)])
+        end
+        return perms
+      end
+    end
+
     private
 
     def option_as_array(key)
