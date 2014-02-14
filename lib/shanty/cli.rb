@@ -2,14 +2,14 @@ module Shanty
   class CLI < Thor
     include Thor::Actions
     
-    DEFAULT_PROVIDER='aws'
+    DEFAULT_PROVIDER='virtualbox'
     DEFAULT_REVISION='HEAD'
 
     desc "init LANGUAGE [PROVIDER]", "Initializes Shanty in the present working directory"
     long_desc <<-LONGDESC
       `shanty init LANGUAGE [PROVIDER]` will create a .shanty directory in
       your user's home directory, create a provider specific config (ex:
-      ~/.shanty/providers/aws.yml), set the default provider in
+      ~/.shanty/providers/virtualbox.yml), set the default provider in
       (~/.shanty/provider_config.yml), and create a project config (.shanty.yml)
       in the current working directory.
 
