@@ -14,7 +14,7 @@ rbenv::install { $vagrant_user:
   home => $vagrant_home,
   require => [Package['rbenv']],
 }
-
+<% if @project_config.rbenv %>
 <% @project_config.rbenv.each do |ruby_version| -%>
 
 rbenv::compile { "$vagrant_user/<%= ruby_version -%>":
@@ -24,3 +24,4 @@ rbenv::compile { "$vagrant_user/<%= ruby_version -%>":
   require => Rbenv::Install["$vagrant_user"],
 }
 <% end -%>
+<% end %>
