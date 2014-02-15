@@ -10,6 +10,7 @@ module Shanty
 
     no_commands do
       def test(options)
+        @tester_exit_code = 0
         # depencency_checker = Shanty::DependencyChecker.new
         # depencency_checker.verify_all
         initial_config(options)
@@ -32,7 +33,8 @@ module Shanty
         # download_test_reports
         say "Finished!", :green
       ensure
-        # cleanup
+        cleanup
+        exit @tester_exit_code
       end
 
       def initial_config(options)
@@ -174,9 +176,27 @@ module Shanty
       end
 
       def run_tests
-        Net::SSH.start("default", nil, {:config => File.join(@project_workspace_folder, "ssh-config.local")}) do |ssh|
+        exit_code = nil
+        exit_signal = nil
+        Net::SSH.start("default", nil, {:config => File.join(@project_workspace_folder, "ssh-config.local")}) do |session|
           say "Running the test steps on the box...", :blue if verbose?
-          puts ssh.exec! "/vagrant/test_runner.sh"
+          session.open_channel do |channel|
+            channel.on_data do |ch, data|
+              $stdout.write(data)
+            end
+
+            channel.on_extended_data do |ch, type, data|
+              $stderr.write(data)
+            end
+
+            channel.on_request("exit-status") do |ch, data|
+              exit_code = data.read_long
+              @tester_exit_code = exit_code
+            end
+
+            channel.exec "/vagrant/test_runner.sh"
+          end
+          session.loop
         end
       end
 
@@ -194,6 +214,8 @@ module Shanty
         if @project_workspace_folder && File.directory?(@project_workspace_folder)
           say "Cleaning up...", :blue
           inside @project_workspace_folder do
+            # TODO: figure out option so vagrant destroy doesn't prompt to
+            # destroy
             run "vagrant destroy", :verbose => verbose?
             remove_dir @project_workspace_folder, :verbose => verbose?
           end
