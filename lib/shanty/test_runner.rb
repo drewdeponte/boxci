@@ -98,9 +98,11 @@ SNIPPET
         <<SNIPPET
 # Beginning of '#{hook_name}' step '#{step}'
 echo "Running '#{hook_name}' step '#{step}'"
+step_exit_code=0
 #{step}
-if [ $? -ne 0 ]; then
-  echo "Err: #{hook_name} step '#{step}' exited with non-zero exit code ($?)"
+step_exit_code=$?
+if [ $step_exit_code -ne 0 ]; then
+  echo "Err: #{hook_name} step '#{step}' exited with non-zero exit code ($step_exit_code)"
   exit 1
 fi
 # End of '#{hook_name}' step '#{step}'
@@ -115,9 +117,11 @@ SNIPPET
         <<SNIPPET
 # Beginning of '#{hook_name}' step '#{step}'
 echo "Running '#{hook_name}' step '#{step}'"
+step_exit_code=0
 #{step}
-if [ $? -ne 0 ]; then
-  echo "Warning: script step '#{step}' exited with non-zero exit code ($?)."
+step_exit_code=$?
+if [ $step_exit_code -ne 0 ]; then
+  echo "Warning: script step '#{step}' exited with non-zero exit code ($step_exit_code)."
   test_runner_exit_status=1
 fi
 # End of '#{hook_name}' step '#{step}'
