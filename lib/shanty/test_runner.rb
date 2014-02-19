@@ -70,10 +70,10 @@ SNIPPET
     end
 
     def generate_continuing_hook_script(hook_name)
-      if !Shanty.project_config.script.empty?
+      if !Shanty.project_config.send(hook_name.to_sym).empty?
         snippets = []
-        Shanty.project_config.script.each do |step|
-          snippets << continue_on_step_failure('script', step)
+        Shanty.project_config.send(hook_name.to_sym).each do |step|
+          snippets << continue_on_step_failure(hook_name, step)
         end
         return snippets.join("\n")
       else
