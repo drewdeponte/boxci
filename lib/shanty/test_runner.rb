@@ -11,8 +11,8 @@ module Shanty
       snippets << <<SNIPPET
 PROJECT_DIR="/vagrant/project"
 mkdir $PROJECT_DIR
+tar -xf /vagrant/project.tar -C $PROJECT_DIR
 cd $PROJECT_DIR 
-tar xf ../project.tar
 SNIPPET
 
       snippets << generate_short_circuiting_hook_script('before_install')
