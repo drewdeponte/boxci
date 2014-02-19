@@ -216,7 +216,7 @@ module Shanty
           inside @project_workspace_folder do
             # TODO: figure out option so vagrant destroy doesn't prompt to
             # destroy
-            run "vagrant destroy", :verbose => verbose?
+            run "vagrant destroy -f", :verbose => verbose?
             remove_dir @project_workspace_folder, :verbose => verbose?
           end
         end
