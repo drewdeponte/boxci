@@ -12,7 +12,7 @@ module Shanty
         end
 
         def after_permutation_switch
-          %q{gem install bundler && bundle install --without assets production}
+          %q{gem install bundler && bundle install --without production}
         end
 
         def generate_starter_puppet_manifest
