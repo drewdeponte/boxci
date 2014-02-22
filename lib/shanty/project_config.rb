@@ -1,7 +1,7 @@
 module Shanty
   class ProjectConfig
     def initialize
-      @project_config = { 'language' => 'ruby' }
+      @project_config = { 'language' => 'ruby', 'box_size' => 'small' }
     end
 
     def load
@@ -19,6 +19,10 @@ module Shanty
     def puppet_facts
       return [] unless @project_config['puppet_facts']
       @project_config['puppet_facts']
+    end
+
+    def box_size
+      @project_config['box_size']
     end
 
     # Test Runner Hooks

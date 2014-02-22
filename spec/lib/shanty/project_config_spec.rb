@@ -49,6 +49,22 @@ describe Shanty::ProjectConfig do
     end
   end
 
+  describe "#box_size" do
+    context "when the config has a box size specified" do
+      it "returns the users specified box size" do
+        box_size_double = double('box size double')
+        subject.instance_variable_set(:@project_config, {"box_size" => box_size_double })
+        expect(subject.box_size).to eq(box_size_double)
+      end
+    end
+
+    context "when the config does NOT have a box size specified" do
+      it "returns the default box size" do
+        expect(subject.box_size).to eq('small')
+      end
+    end
+  end
+
   describe "#before_install" do
     context "when before_install is provided in the project config" do
       it "grabs the named hook as an array" do
