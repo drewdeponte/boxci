@@ -2,7 +2,12 @@ username: the_openstack_username
 password: the_openstack_password
 private_key_path: "~/.ssh/id_rsa"
 key_pair: the_openstack_keypair
-flavor: the_node_flavor
+box_size_flavor_map:
+  tiny: m1.tiny
+  small: m1.small
+  medium: m1.medium
+  large: m1.large
+  xlarge: m1.xlarge
 image: the_image_identifier
 endpoint: the_openstack_tokens_endpoint
 network: the_openstack_network_identifier

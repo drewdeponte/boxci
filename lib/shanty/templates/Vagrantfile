@@ -8,6 +8,26 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.box = "precise64"
   config.vm.box_url = "http://files.vagrantup.com/precise64.box"
 
+  config.vm.provider :virtualbox do |vb|
+  <% if @project_config.box_size == 'tiny' %>
+    vb.customize ["modifyvm", :id, "--memory", "512"]
+  <% elsif @project_config.box_size == 'small' %>
+    vb.customize ["modifyvm", :id, "--memory", "2048"]
+  <% elsif @project_config.box_size == 'medium' %>
+    vb.customize ["modifyvm", :id, "--memory", "4096"]
+    vb.customize ["modifyvm", :id, "--cpus", "2"]
+    vb.customize ["modifyvm", :id, "--ioapic", "on"]
+  <% elsif @project_config.box_size == 'large' %>
+    vb.customize ["modifyvm", :id, "--memory", "8192"]
+    vb.customize ["modifyvm", :id, "--cpus", "4"]
+    vb.customize ["modifyvm", :id, "--ioapic", "on"]
+  <% elsif @project_config.box_size == 'xlarge' %>
+    vb.customize ["modifyvm", :id, "--memory", "16384"]
+    vb.customize ["modifyvm", :id, "--cpus", "8"]
+    vb.customize ["modifyvm", :id, "--ioapic", "on"]
+  <% end %>
+  end
+
   config.vm.provision "puppet" do |puppet|
     puppet.facter = {
       "vagrant_user" => "vagrant",
