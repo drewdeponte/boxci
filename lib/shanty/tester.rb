@@ -27,10 +27,10 @@ module Shanty
         setup_ssh_config
         install_puppet_on_box
         provision_box
-        create_reports_directory
+        create_artifact_directory
         upload_test_runner
         run_tests
-        # download_test_reports
+        download_artifacts
         say "Finished!", :green
       ensure
         cleanup
@@ -39,7 +39,6 @@ module Shanty
 
       def initial_config(options)
         @gem_path = File.expand_path(File.dirname(__FILE__) + "/../..")
-        @report_location = File.join(Shanty.project_path, "reports")
         @puppet_path = File.join(Shanty.project_path, "puppet")
         @project_uid = "#{rand(1000..9000)}-#{rand(1000..9000)}-#{rand(1000..9000)}-#{rand(1000..9000)}"
         @project_workspace_folder = File.join(File.expand_path(ENV['HOME']), '.shanty', @project_uid)
@@ -155,14 +154,10 @@ module Shanty
         end
       end
 
-      def create_reports_directory
-        say "Creating the reports directory on the box...", :blue if verbose?
+      def create_artifact_directory
+        say "Creating the artifact directory on the box...", :blue if verbose?
         Net::SSH.start("default", nil, {:config => File.join(@project_workspace_folder, "ssh-config.local")}) do |ssh|
-          # TODO: Make this configurable, ex: report_exts = @config['report_file_ext'] || ['xml']
-          report_exts = ['xml']
-          report_exts.each do |ext|
-            ssh.exec!  "mkdir -p /vagrant/reports/#{ext}"
-          end
+          ssh.exec!  "mkdir -p #{@project_config.artifact_path}"
         end
       end
 
@@ -200,13 +195,11 @@ module Shanty
         end
       end
 
-      def download_test_reports
+      def download_artifacts
         Net::SSH.start("default", nil, {:config => File.join(@project_workspace_folder, "ssh-config.local")}) do |ssh|
-          empty_directory @report_location, :verbose => verbose?
-          # say "Removing old reports...", :blue if verbose?
-          Dir["#{@report_location}/*.*"].each { |file| FileUtils.rm(file) }
           say "Downloading the reports...", :blue if verbose?
-          ssh.scp.download! "/vagrant/#{@project_uid}/reports/*", @report_location, :recursive => true
+          puts ssh.exec! "cd #{@project_config.artifact_path} && tar cf /tmp/shanty_artifacts.tar ."
+          ssh.scp.download! "/tmp/shanty_artifacts.tar", '.'
         end
       end
 
