@@ -65,6 +65,22 @@ describe Shanty::ProjectConfig do
     end
   end
 
+  describe "#artifact_path" do
+    context "when the config has an artifact path specified" do
+      it "returns the artifact path specified in the config" do
+        artifact_path_double = double('artifact path double')
+        subject.instance_variable_set(:@project_config, { "artifact_path" => artifact_path_double })
+        expect(subject.artifact_path).to eq(artifact_path_double)
+      end
+    end
+
+    context "when the config does NOT have an artifact path specified" do
+      it "returns the default artifact path" do
+        expect(subject.artifact_path).to eq('/tmp/shanty/artifacts')
+      end
+    end
+  end
+
   describe "#before_install" do
     context "when before_install is provided in the project config" do
       it "grabs the named hook as an array" do

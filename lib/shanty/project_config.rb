@@ -1,7 +1,7 @@
 module Shanty
   class ProjectConfig
     def initialize
-      @project_config = { 'language' => 'ruby', 'box_size' => 'small' }
+      @project_config = { 'language' => 'ruby', 'box_size' => 'small', 'artifact_path' => '/tmp/shanty/artifacts' }
     end
 
     def load
@@ -23,6 +23,10 @@ module Shanty
 
     def box_size
       @project_config['box_size']
+    end
+
+    def artifact_path
+      @project_config['artifact_path']
     end
 
     # Test Runner Hooks
