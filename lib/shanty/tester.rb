@@ -17,24 +17,56 @@ module Shanty
         @tester_exit_code = 0
         # depencency_checker = Shanty::DependencyChecker.new
         # depencency_checker.verify_all
+        puts "DREW: test: about to run initial_config()"
         initial_config(options)
+        puts "DREW: test: ran initial_config()"
 
+        puts "DREW: test: about to create_project_folder()"
         create_project_folder
+        puts "DREW: test: ran create_project_folder()"
+        puts "DREW: test: about to run create_project_archive()"
         create_project_archive
+        puts "DREW: test: ran create_project_archive()"
+        puts "DREW: test: about to run write_vagrant_file()"
         write_vagrant_file
+        puts "DREW: test: ran write_vagrant_file()"
+        puts "DREW: test: about to run write_test_runner()"
         write_test_runner
+        puts "DREW: test: ran write_test_runner()"
+        puts "DREW: test: checking if the provider requires plugins"
         if @provider_object.requires_plugin?
+          puts "DREW: test: the provider DOES require plugins"
+          puts "DREW: test: about to run install_vagrant_plugin()"
           install_vagrant_plugin
+          puts "DREW: test: ran install_vagrant_plugin()"
+          puts "DREW: test: about to run add_provider_box()"
           add_provider_box
+          puts "DREW: test: ran add_provider_box()"
         end
+        puts "DREW: test: about to run spin_up_box()"
         spin_up_box
+        puts "DREW: test: ran spin_up_box()"
+        puts "DREW: test: about to run setup_ssh_config()"
         setup_ssh_config
+        puts "DREW: test: ran setup_ssh_config()"
+        puts "DREW: test: about ti run install_puppet_on_box()"
         install_puppet_on_box
+        puts "DREW: test: ran install_puppet_on_box()"
+        puts "DREW: test: about to provision_box()"
         provision_box
+        puts "DREW: test: ran provision_box()"
+        puts "DREW: test: about to create_artifact_directory()"
         create_artifact_directory
+        puts "DREW: test: ran create_artifact_directory()"
+        puts "DREW: test: about to run upload_test_runner()"
         upload_test_runner
+        puts "DREW: test: ran upload_test_runner()"
+        puts "DREW: test: about to run run_tests()"
         run_tests
+        puts "DREW: test: ran run_tests()"
+        puts "DREW: test: about to run dowload_artifacts()"
         download_artifacts
+        puts "DREW: test: ran download_artifacts()"
         say "Finished!", :green
       ensure
         cleanup
