@@ -1,9 +1,15 @@
-# Shanty
+# Shanty: a shack for your Vagrant
 
-Shanty is a project focused on providing standards around the use of
-[Vagrant](http://www.vagrantup.com/) to make managing
-[Vagrant](http://www.vagrantup.com/) based development environments and
-continuous integration environments easy.
+Shanty makes standardizing and interacting with your development environment
+and continuous integration environment as easy as possible.
+
+It does this by focusing implementing standards around the use of 
+[Vagrant](http://www.vagrantup.com/) for managing your development environment
+and continuous integration environment. This means that it helps you
+config and setup [Vagrant](http://www.vagrantup.com/), generate well
+structured initial puppet manifests to get you off and iterating, and handle
+spinning up your continuous integration & run the tests locally or in the
+cloud via aws or openstack.
 
 ## Installation
 
