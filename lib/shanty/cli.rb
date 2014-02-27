@@ -54,8 +54,9 @@ module Shanty
     option :verbose, :type => :boolean, :aliases => "-v"
     option :provider, :type => :string, :aliases => "-p", :default => Shanty.default_provider
     def test(revision=DEFAULT_REVISION)
-      tester = Shanty::Tester.new
-      tester.test(options.merge({"revision" => revision}))
+      puts "DREW: waeuaoeuaoeuaoeuaoeuaoeuaoeuaoeuaoeueoauoeaaoeuaoeuaoe"
+      # tester = Shanty::Tester.new
+      # tester.test(options.merge({"revision" => revision}))
     end
   end
 end
