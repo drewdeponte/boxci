@@ -1,5 +1,17 @@
+- Disable shared folders and rsyncing in Shanty created vagrant boxes.
+  http://docs.vagrantup.com/v2/synced-folders/basic_usage.html
+
+  Vagrant.configure("2") do |config|
+    config.vm.synced_folder ".", "/vagrant", disabled: true
+  end
+- Wrap exception handlers around the commands at the top level of CLI so that
+  when unhandled exceptions happen we can display a sorry message to the user
+  and give them instructions for reporting the issue. We might even want to
+  have it post to github to create an issue when this happens irrespective of
+  the user so that we are notified we need to handle another failure case. We
+  might want to use some of the description provided by bundler,
+  http://bundler.io/issues.html
 - Add output to explain next steps after "shanty init"
-- Use repo name as project name by default
 - Extract all options from template files, move to default template files
   - Search user's config files for overrides on any default configs
   - Add documentation for all allowed config values
@@ -11,8 +23,3 @@
 - Add shanty lint functionality that verifies the required .shanty.yml config
   exists, the provider config exists, and that the required fields in those
   configs exist are have valid values.
-- Add --provider=aws as an optional option to the `shanty init` command. That
-  way it can generate different provider_configs for the different providers.
-
-- Make jobs/steps output pipe to logs, suppress it on stdout, stderr.
-  - SCP those logs along with /reports
