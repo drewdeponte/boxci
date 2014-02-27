@@ -18,7 +18,14 @@ module Shanty
         # depencency_checker = Shanty::DependencyChecker.new
         # depencency_checker.verify_all
         puts "DREW: test: about to run initial_config()"
-        initial_config(options)
+        begin
+          initial_config(options)
+        rescue Exception => e
+          puts "DREW: exception happened"
+          puts e.class
+          puts e.message
+          puts e.backtrace.join("\n")
+        end
         puts "DREW: test: ran initial_config()"
 
         puts "DREW: test: about to create_project_folder()"
