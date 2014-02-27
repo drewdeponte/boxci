@@ -6,6 +6,10 @@ module Shanty
   class Tester < Thor
     include Thor::Actions
 
+    def self.exit_on_failure?
+      true
+    end
+
     source_root(File.dirname(__FILE__))
 
     no_commands do
