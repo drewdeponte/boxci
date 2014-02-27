@@ -25,6 +25,7 @@ module Shanty
           puts e.class
           puts e.message
           puts e.backtrace.join("\n")
+          raise e
         end
         puts "DREW: test: ran initial_config()"
 
