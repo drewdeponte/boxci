@@ -5,25 +5,28 @@ module Shanty
     DEFAULT_PROVIDER='virtualbox'
     DEFAULT_REVISION='HEAD'
 
-    desc "init LANGUAGE [PROVIDER]", "Initializes Shanty in the present working directory"
+    desc "init [-p PROVIDER] LANGUAGE", "Initializes Shanty in the present working directory"
     long_desc <<-LONGDESC
-      `shanty init LANGUAGE [PROVIDER]` will create a .shanty directory in
+      `shanty init [-p PROVIDER] LANGUAGE` will create a .shanty directory in
       your user's home directory, create a provider specific config (ex:
       ~/.shanty/providers/virtualbox.yml), set the default provider in
-      (~/.shanty/provider_config.yml), and create a project config (.shanty.yml)
+      (~/.shanty/global_config.yml), and create a project config (.shanty.yml)
       in the current working directory.
 
       LANGUAGE is required, it is the language of your project, see supported
       languages below.
 
-      PROVIDER is optional, and if omitted will default to '#{DEFAULT_PROVIDER}'.
+      --provider (-p) is optional. If omitted, it will use your configured
+      default provider (#{Shanty.default_provider}). If you don't have a
+      default provider configured it will default to '#{DEFAULT_PROVIDER}'.
 
       Supported Languages: #{Shanty::Language.supported_languages.join(", ")}
       \005Supported Providers: #{Shanty::Provider.supported_providers.join(", ")}
     LONGDESC
-    def init(language, provider=DEFAULT_PROVIDER)
+    option :provider, :type => :string, :aliases => "-p", :default => Shanty.default_provider
+    def init(language)
       initializer = Shanty::Initializer.new
-      initializer.init(language, provider)
+      initializer.init(language, options['provider'])
     end
 
     desc "build", "Generates Vagrantfile & starter Puppet manifest"
