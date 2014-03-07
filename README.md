@@ -59,6 +59,9 @@ added.
 
 ### Update the generated configs
 
+Now that the initial configs and skeleton have been generated. We need to go
+through the configs and update them.
+
 ### Build your base Shanty
 
 ### Iterate on your Shanty
