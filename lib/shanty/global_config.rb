@@ -16,7 +16,11 @@ module Shanty
 
     def read_global_config_hash
       global_config_path = File.join(ENV['HOME'], '/.shanty/global_config.yml')
-      global_config = YAML::load_file(global_config_path)
+      if File.exist?(global_config_path)
+        global_config = YAML::load_file(global_config_path)
+      else
+        global_config = {}
+      end
     end
   end
 end
