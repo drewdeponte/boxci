@@ -60,5 +60,11 @@ module Shanty
       tester = Shanty::Tester.new
       tester.test(options.merge({"revision" => revision}))
     end
+
+    map "--version" => :version
+    desc "--version", "Output the version of Shanty being executed"
+    def version
+      puts "v#{Shanty::VERSION}"
+    end
   end
 end
