@@ -14,6 +14,10 @@ module Shanty
 
     no_commands do
       def test(options)
+        Signal.trap('SIGTERM') do
+          cleanup
+        end
+
         @tester_exit_code = 0
         # depencency_checker = Shanty::DependencyChecker.new
         # depencency_checker.verify_all
