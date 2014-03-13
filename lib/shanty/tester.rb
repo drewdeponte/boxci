@@ -24,6 +24,12 @@ module Shanty
           exit 255
         end
 
+        Signal.trap('SIGPIPE') do
+          File.open('/tmp/shanty.log', 'w') do |f|
+            f.write("Just swallowed SIGPIPE\n")
+          end
+        end
+
         @tester_exit_code = 0
         # depencency_checker = Shanty::DependencyChecker.new
         # depencency_checker.verify_all
