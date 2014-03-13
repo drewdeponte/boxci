@@ -15,7 +15,13 @@ module Shanty
     no_commands do
       def test(options)
         Signal.trap('SIGTERM') do
+          File.open('/tmp/shanty.log', 'w+') do |f|
+            f.write("Got a SIGTERM\n")
+          end
           cleanup
+          File.open('/tmp/shanty.log', 'w+') do |f|
+            f.write("Finished cleanup process from SIGTERM\n")
+          end
           exit 255
         end
 
@@ -25,7 +31,7 @@ module Shanty
         end
 
         Signal.trap('SIGPIPE') do
-          File.open('/tmp/shanty.log', 'w') do |f|
+          File.open('/tmp/shanty.log', 'w+') do |f|
             f.write("Just swallowed SIGPIPE\n")
           end
         end
