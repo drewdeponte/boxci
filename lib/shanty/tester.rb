@@ -16,6 +16,12 @@ module Shanty
       def test(options)
         Signal.trap('SIGTERM') do
           cleanup
+          exit 255
+        end
+
+        Signal.trap('SIGINT') do
+          cleanup
+          exit 255
         end
 
         @tester_exit_code = 0
