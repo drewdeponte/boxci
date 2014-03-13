@@ -57,15 +57,8 @@ module Shanty
     option :verbose, :type => :boolean, :aliases => "-v"
     option :provider, :type => :string, :aliases => "-p", :default => Shanty.default_provider
     def test(revision=DEFAULT_REVISION)
-      begin
-        tester = Shanty::Tester.new
-        tester.test(options.merge({"revision" => revision}))
-      rescue Exception => e
-        puts e.class
-        puts e.message
-        puts e.backtrace.join("\n")
-        raise e
-      end
+      tester = Shanty::Tester.new
+      tester.test(options.merge({"revision" => revision}))
     end
 
     map "--version" => :version
