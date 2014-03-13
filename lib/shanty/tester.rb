@@ -42,14 +42,14 @@ module Shanty
         @tester_exit_code = 0
         # depencency_checker = Shanty::DependencyChecker.new
         # depencency_checker.verify_all
-        begin
+        # begin
           initial_config(options)
-        rescue Exception => e
-          puts e.class
-          puts e.message
-          puts e.backtrace.join("\n")
-          raise e
-        end
+        # rescue Exception => e
+        #   puts e.class
+        #   puts e.message
+        #   puts e.backtrace.join("\n")
+        #   raise e
+        # end
 
         create_project_folder
         create_project_archive
@@ -68,6 +68,13 @@ module Shanty
         run_tests
         download_artifacts
         say "Finished!", :green
+      rescue Exception => e
+        File.open('/tmp/shanty.log', 'a+') do |f|
+          f.write("#{e.class}\n")
+          f.write("#{e.message}\n")
+          f.write("#{e.backtrace.join("\n")}\n")
+        end
+        raise e
       ensure
         cleanup
         exit @tester_exit_code
