@@ -19,12 +19,12 @@ module Shanty
         end
 
         Signal.trap('SIGTERM') do
+          File.open('/tmp/shanty.log', 'a+') { |f| f.write("Got SIGTERM, going to cleanup...\n") }
+
           begin
             cleanup
           rescue Errno::EPIPE => e
-            File.open('/tmp/shanty.log', 'a+') do |f|
-              f.write("SIGTERM handler swallowed Errno::EPIPE exception\n")
-            end
+            File.open('/tmp/shanty.log', 'a+') { |f| f.write("SIGTERM handler swallowed Errno::EPIPE exception\n") }
           rescue => e
             File.open('/tmp/shanty.log', 'a+') do |f|
               f.write("SIGTERM handler caught exception")
@@ -35,9 +35,7 @@ module Shanty
             raise e
           end
 
-          File.open('/tmp/shanty.log', 'a+') do |f|
-            f.write("Finished cleanup process from SIGTERM\n")
-          end
+          File.open('/tmp/shanty.log', 'a+') { |f| f.write("Finished cleanup process from SIGTERM\n") }
           exit 255
         end
 
