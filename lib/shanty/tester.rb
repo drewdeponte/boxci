@@ -266,10 +266,10 @@ module Shanty
             File.open('/tmp/shanty.log', 'a+') { |f| f.write("Cleaning up...\n") }
           end
           inside @project_workspace_folder do
-            `vagrant destroy -f >> /tmp/shanty.log`
+            `VAGRANT_LOG=debug vagrant destroy -f &>> /tmp/shanty.log`
             # run "vagrant destroy -f", :verbose => verbose?, :capture => true
           end
-          `rm -rf #{@project_workspace_folder} >> /tmp/shanty.log`
+          `rm -rf #{@project_workspace_folder} &>> /tmp/shanty.log`
           # remove_dir @project_workspace_folder, :verbose => verbose?, :capture => true
         end
       end
