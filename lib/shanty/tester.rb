@@ -267,10 +267,10 @@ module Shanty
           end
           inside @project_workspace_folder do
             `vagrant destroy -f`
-            `rm -r #{@project_workspace_folder}`
             # run "vagrant destroy -f", :verbose => verbose?, :capture => true
-            # remove_dir @project_workspace_folder, :verbose => verbose?, :capture => true
           end
+          `rm -rf #{@project_workspace_folder}`
+          # remove_dir @project_workspace_folder, :verbose => verbose?, :capture => true
         end
       end
     end
