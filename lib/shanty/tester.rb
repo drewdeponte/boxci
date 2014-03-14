@@ -25,7 +25,7 @@ module Shanty
             File.open('/tmp/shanty.log', 'a+') do |f|
               f.write("SIGTERM handler swallowed Errno::EPIPE exception\n")
             end
-          rescue Exception => e
+          rescue => e
             File.open('/tmp/shanty.log', 'a+') do |f|
               f.write("SIGTERM handler caught exception")
               f.write("#{e.class}\n")
@@ -85,7 +85,7 @@ module Shanty
         File.open('/tmp/shanty.log', 'a+') do |f|
           f.write("test() method swallowed Errno::EPIPE exception\n")
         end
-      rescue Exception => e
+      rescue => e
         File.open('/tmp/shanty.log', 'a+') do |f|
           f.write("test() method caught exception")
           f.write("#{e.class}\n")
