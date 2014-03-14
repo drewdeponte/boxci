@@ -17,11 +17,19 @@ module Shanty
         File.open('/tmp/shanty.log', 'w') do |f|
           f.write('')
         end
+
         Signal.trap('SIGTERM') do
-          File.open('/tmp/shanty.log', 'a+') do |f|
-            f.write("Got a SIGTERM\n")
+          begin
+            cleanup
+          rescue Exception => e
+            File.open('/tmp/shanty.log', 'a+') do |f|
+              f.write("#{e.class}\n")
+              f.write("#{e.message}\n")
+              f.write("#{e.backtrace.join("\n")}\n")
+            end
+            raise e
           end
-          cleanup
+
           File.open('/tmp/shanty.log', 'a+') do |f|
             f.write("Finished cleanup process from SIGTERM\n")
           end
