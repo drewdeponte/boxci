@@ -23,10 +23,11 @@ module Shanty
             cleanup
           rescue Errno::EPIPE => e
             File.open('/tmp/shanty.log', 'a+') do |f|
-              f.write("Just swallowed Errno::EPIPE exception\n")
+              f.write("SIGTERM handler swallowed Errno::EPIPE exception\n")
             end
           rescue Exception => e
             File.open('/tmp/shanty.log', 'a+') do |f|
+              f.write("SIGTERM handler caught exception")
               f.write("#{e.class}\n")
               f.write("#{e.message}\n")
               f.write("#{e.backtrace.join("\n")}\n")
@@ -55,7 +56,7 @@ module Shanty
         # depencency_checker = Shanty::DependencyChecker.new
         # depencency_checker.verify_all
         # begin
-          initial_config(options)
+        initial_config(options)
         # rescue Exception => e
         #   puts e.class
         #   puts e.message
@@ -82,10 +83,11 @@ module Shanty
         say "Finished!", :green
       rescue Errno::EPIPE => e
         File.open('/tmp/shanty.log', 'a+') do |f|
-          f.write("Just swallowed Errno::EPIPE exception\n")
+          f.write("test() method swallowed Errno::EPIPE exception\n")
         end
       rescue Exception => e
         File.open('/tmp/shanty.log', 'a+') do |f|
+          f.write("test() method caught exception")
           f.write("#{e.class}\n")
           f.write("#{e.message}\n")
           f.write("#{e.backtrace.join("\n")}\n")
