@@ -21,6 +21,10 @@ module Shanty
         Signal.trap('SIGTERM') do
           begin
             cleanup
+          rescue Errno::EPIPE => e
+            File.open('/tmp/shanty.log', 'a+') do |f|
+              f.write("Just swallowed Errno::EPIPE exception\n")
+            end
           rescue Exception => e
             File.open('/tmp/shanty.log', 'a+') do |f|
               f.write("#{e.class}\n")
