@@ -260,12 +260,16 @@ module Shanty
 
       def cleanup
         if @project_workspace_folder && File.directory?(@project_workspace_folder)
-          say "Cleaning up...", :blue
+          begin
+            say "Cleaning up...", :blue
+          rescue Errno::EPIPE => e
+            File.open('/tmp/shanty.log', 'a+') { |f| f.write("Cleaning up...\n") }
+          end
           inside @project_workspace_folder do
-            # TODO: figure out option so vagrant destroy doesn't prompt to
-            # destroy
-            run "vagrant destroy -f", :verbose => verbose?
-            remove_dir @project_workspace_folder, :verbose => verbose?
+            `vagrant destroy -f`
+            `rm -r #{@project_workspace_folder}`
+            # run "vagrant destroy -f", :verbose => verbose?, :capture => true
+            # remove_dir @project_workspace_folder, :verbose => verbose?, :capture => true
           end
         end
       end
