@@ -18,6 +18,14 @@ module Shanty
           f.write('')
         end
 
+        # NOTE: The Signal.trap('SIGTERM') is required for Bamboo's "Stop
+        # Build" functionality because Bamboo basically sends a SIGTERM to
+        # Shanty and then immediately closes its stdout and stderr pipes
+        # before Shanty has had a chance to cleanup. Therefore, it causes
+        # Errno::EPIPE exceptions to be raised. It does seem that in general
+        # the use of SIGTERM is correct however one would hope that stdout and
+        # stderr pipes would stay open until Shanty exits, but sadly they
+        # do not.
         Signal.trap('SIGTERM') do
           File.open('/tmp/shanty.log', 'a+') { |f| f.write("Got SIGTERM, going to cleanup...\n") }
 
@@ -44,19 +52,15 @@ module Shanty
           exit 255
         end
 
+        # TODO: I don't believe this is necessary as I think Ruby's default
+        # handler for SIGPIPE is to ignore it. I need to test this though to
+        # verify.
         Signal.trap('SIGPIPE', 'SIG_IGN')
 
         @tester_exit_code = 0
         # depencency_checker = Shanty::DependencyChecker.new
         # depencency_checker.verify_all
-        # begin
         initial_config(options)
-        # rescue Exception => e
-        #   puts e.class
-        #   puts e.message
-        #   puts e.backtrace.join("\n")
-        #   raise e
-        # end
 
         create_project_folder
         create_project_archive
@@ -258,8 +262,13 @@ module Shanty
         end
       end
 
-      def cleanup
         if @project_workspace_folder && File.directory?(@project_workspace_folder)
+          # NOTE: The begin rescue for Errno::EPIPE and the &>>
+          # /tmp/shanty.log in the backtick execution ARE required for
+          # Bamboo's "Stop Build" functionality because Bamboo basically sends
+          # a SIGTERM to Shanty and then immediately closes its stdout and
+          # stderr pipes before Shanty has had a chance to cleanup. Therefore,
+          # it causes Errno::EPIPE exceptions to be raised.
           begin
             say "Cleaning up...", :blue
           rescue Errno::EPIPE => e
