@@ -262,6 +262,7 @@ module Shanty
         end
       end
 
+      def cleanup
         if @project_workspace_folder && File.directory?(@project_workspace_folder)
           # NOTE: The begin rescue for Errno::EPIPE and the &>>
           # /tmp/shanty.log in the backtick execution ARE required for
