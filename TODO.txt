@@ -47,3 +47,6 @@
 - Figure out how we would want to allow users to override the puppet manifests
   to use within the shanty build and even specify an external manifiest of
   somesort.
+- Figure out how to best package the application as a system wide command line
+  tool and not necessarily a gem. It might be worth looking at how Vagrant has
+  done this. Another goodle example might be thoughtbot's gitsh project.
