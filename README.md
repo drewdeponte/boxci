@@ -3,7 +3,7 @@
 Boxci makes creating a virtualized development & continuous integration
 environments as easy as possible.
 
-It does this by focusing on implementing standards around the use of 
+It does this by focusing on implementing standards around the use of
 [Vagrant](http://www.vagrantup.com/) for managing your development
 and continuous integration environment. This means that it helps you
 configure and setup [Vagrant](http://www.vagrantup.com/), generate a well
@@ -34,7 +34,7 @@ To *boxcify* your project you need to run the `boxci init <language>` command.
 This command will create an initial `.boxci.yml` config for you in the current
 working directory. Therefore, you should run this command from the root of
 your project. It will also handle creating your user level `boxci`
-configurations in the `~/.boxci` direcotry. An example of this can be seen as
+configurations in the `~/.boxci` directory. An example of this can be seen as
 follows:
 
     $ boxci init ruby
@@ -46,7 +46,7 @@ following is an example:
 
     $ boxci init -p openstack ruby
 
-This will go through and setup the proper directory stucture and create the
+This will go through and setup the proper directory structure and create the
 config files just as before. However, when it identifies conflicts with the
 existing files it will prompt you and ask you if you want to overwrite, diff
 the files, not overwrite, etc.
