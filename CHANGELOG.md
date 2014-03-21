@@ -6,6 +6,8 @@ versions as well as provide a rough history.
 
 #### Next Release
 
+#### v0.0.30
+
 - Renamed project from `shanty` to `boxci`
 - Moved all `TODO.txt` items to GitHub Issues
 - Corrected author emails in the gemspec
