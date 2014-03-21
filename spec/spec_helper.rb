@@ -1,6 +1,6 @@
 $LOAD_PATH.unshift File.expand_path(File.dirname(__FILE__) + '/../lib')
 
-require 'shanty'
+require 'boxci'
  
 RSpec.configure do |config|
   # Run specs in random order to surface order dependencies. If you find an
