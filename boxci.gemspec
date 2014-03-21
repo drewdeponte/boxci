@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.email         = ["cyphactor@gmail.com", "brimil01@gmail.com", "russcloak@gmail.cm"]
   spec.summary       = %q{Tool simplifying Vagrant based development & continuous integration environments.}
   spec.description   = %q{Boxci is focused on defining standards and building tooling around using Vagrant for development & continuous integration environments to make using them as easy as possible.}
-  spec.homepage      = ""
+  spec.homepage      = "http://github.com/reachlocal/boxci"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files -z`.split("\x0")
