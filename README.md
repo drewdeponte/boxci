@@ -1,15 +1,15 @@
-# Boxci: a shack for your Vagrant
+# boxci: standardizing virtual development & ci environments
 
-Boxci makes standardizing and interacting with your development environment
-and continuous integration environment as easy as possible.
+Boxci makes creating a virtualized development & continuous integration
+environments as easy as possible.
 
-It does this by focusing implementing standards around the use of 
-[Vagrant](http://www.vagrantup.com/) for managing your development environment
+It does this by focusing on implementing standards around the use of 
+[Vagrant](http://www.vagrantup.com/) for managing your development
 and continuous integration environment. This means that it helps you
-config and setup [Vagrant](http://www.vagrantup.com/), generate well
-structured initial puppet manifests to get you off and iterating, and handle
-spinning up your continuous integration & run the tests locally or in the
-cloud via aws or openstack.
+configure and setup [Vagrant](http://www.vagrantup.com/), generate a well
+structured initial puppet manifest, and handles spinning up your puppet
+managed continuous integration environment up in the cloud and running your
+automated test suites.
 
 ## Installation
 
@@ -22,27 +22,27 @@ Install it by running the following:
 Setting a new or existing project up with Boxci is done with the following
 steps.
 
-1. Setup initial Boxci configs & skeletons
+1. Setup initial `boxci` configs & skeletons
 2. Update the generated configs
-3. Build your base Boxci
-4. Iterate on your Boxci
-5. Run your Test Suite using Boxci
+3. Build your base `boxci` puppet manifest
+4. Iterate on your `boxci` puppet manifest
+5. Run your test suite using `boxci`
 
-### Setup initial Boxci configs & skeletons
+### Setup initial boxci configs & skeletons
 
-To *shantify* your project you need to run the `boxci init <language>` command.
-This command will create an initial `.boxci.yml` config for you in the
-current working directory. Therefore, you should run this command from the
-root of your project. It will also handle creating your user level boxci
+To *boxcify* your project you need to run the `boxci init <language>` command.
+This command will create an initial `.boxci.yml` config for you in the current
+working directory. Therefore, you should run this command from the root of
+your project. It will also handle creating your user level `boxci`
 configurations in the `~/.boxci` direcotry. An example of this can be seen as
 follows:
 
     $ boxci init ruby
 
 *Note:* The above will create user level configs using the default provider
-`virtualbox`. If you want to use boxci with a cloud provider simply rerun the
-init command specifying one of the supported providers. The following is an
-example:
+`virtualbox`. If you want to use `boxci` always with a cloud provider simply
+rerun the `init` command specifying one of the supported providers. The
+following is an example:
 
     $ boxci init -p openstack ruby
 
@@ -52,8 +52,8 @@ existing files it will prompt you and ask you if you want to overwrite, diff
 the files, not overwrite, etc.
 
 This means that you can rerun the command over and over again and not worry
-about it overwriting your configs unless it tells you too. This is also useful
-in the scenarios where a new version of boxci has come out and added config
+about it overwriting your configs unless you tell it too. This is also useful
+in the scenarios where a new version of `boxci` has come out and added config
 options because then you can rerun it and choose to diff them to see what was
 added.
 
@@ -68,24 +68,28 @@ through the configs and update them.
 
 ### Run your Test Suite using Boxci
 
-Bring up the boxci with your cloud provider, run the tests, and shutdown the
-cloud node.
+To run your automated test suite in the cloud or locally in a `boxci` managed
+virtual machine simply run the following from the project's root directory.
 
-    $ cd project_dir
     $ boxci test
 
-To see more output on what is happening, pass the "-v" flag:
+To see more output on what is happening, pass the "-v" flag for verbose:
 
     $ boxci test -v
 
+For details on other options you can set for test runs run the following
+command:
+
+    $ boxci help test
+
 ## Get Help
 
-Boxci provides a useful help system within the command line tool. You can see
-these messages by using the help command as follows:
+`boxci` provides a useful help system within the command line tool. You can
+see these messages by using the help command as follows:
 
     $ boxci help
 
-The above shows you the top level boxci help including a break down of it's
+The above shows you the top level `boxci help` including a break down of it's
 subcommands. You can get detailed help on each subcommand by running the
 following:
 
@@ -103,11 +107,11 @@ following:
 After initializing, you need to configure the `.boxci.yml` in the root of your
 project.
 
-See the generated `boxci.yml` file for help with configuration.
+See the generated `.boxci.yml` file for help with configuration.
 
 ## Contributing
 
-1. Fork it ( http://github.com/<my-github-username>/boxci/fork )
+1. Fork it ( http://github.com/reachlocal/boxci/fork )
 2. Create your feature branch (`git checkout -b my-new-feature`)
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
