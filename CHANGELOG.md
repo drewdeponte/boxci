@@ -6,6 +6,9 @@ versions as well as provide a rough history.
 
 #### Next Release
 
+- Added exporting of `BOXCI_TEST_RESULT` with the value being the exit code of
+  the bulid. This allows it to be inspected in the `after_failure`,
+  `after_success`, or `after_script` commands.
 - Made `after_success`, `after_failure`, and `after_script` no longer affect
   the `boxci test` exit code.
 

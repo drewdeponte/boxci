@@ -7,7 +7,7 @@ module Boxci
     def generate_script
       snippets = []
       snippets << %q{#!/bin/bash --login}
-      snippets << %q{test_runner_exit_status=0}
+      snippets << %q{BOXCI_TEST_RESULT=0}
       snippets << <<SNIPPET
 PROJECT_DIR="/vagrant/project"
 mkdir $PROJECT_DIR
@@ -28,6 +28,7 @@ SNIPPET
 
           snippets << generate_short_circuiting_hook_script('before_script')
           snippets << generate_script_hook_script
+          snippets << %q{export BOXCI_TEST_RESULT=$BOXCI_TEST_RESULT}
           snippets << generate_after_success_and_failure_hook_script
           snippets << generate_continue_and_ignore_hook_script('after_script')
         end
@@ -36,10 +37,11 @@ SNIPPET
 
         snippets << generate_short_circuiting_hook_script('before_script')
         snippets << generate_script_hook_script
+        snippets << %q{export BOXCI_TEST_RESULT=$BOXCI_TEST_RESULT}
         snippets << generate_after_success_and_failure_hook_script
         snippets << generate_continue_and_ignore_hook_script('after_script')
       end
-      snippets << %{exit $test_runner_exit_status}
+      snippets << %{exit $BOXCI_TEST_RESULT}
       return snippets.join("\n")
     end
 
@@ -47,7 +49,7 @@ SNIPPET
 
     def generate_after_success_and_failure_hook_script
       <<SNIPPET
-if [ $test_runner_exit_status -eq 0 ]; then
+if [ $BOXCI_TEST_RESULT -eq 0 ]; then
 :
 #{generate_continue_and_ignore_hook_script('after_success')}
 else
@@ -122,7 +124,7 @@ step_exit_code=0
 step_exit_code=$?
 if [ $step_exit_code -ne 0 ]; then
   echo "Warning: #{hook_name} step '#{step}' exited with non-zero exit code ($step_exit_code)."
-  test_runner_exit_status=1
+  BOXCI_TEST_RESULT=1
 fi
 # End of '#{hook_name}' step '#{step}'
 SNIPPET
