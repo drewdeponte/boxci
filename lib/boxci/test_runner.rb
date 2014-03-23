@@ -29,7 +29,7 @@ SNIPPET
           snippets << generate_short_circuiting_hook_script('before_script')
           snippets << generate_script_hook_script
           snippets << generate_after_success_and_failure_hook_script
-          snippets << generate_continuing_hook_script('after_script')
+          snippets << generate_continue_and_ignore_hook_script('after_script')
         end
       else
         snippets << short_circuit_on_step_failure('after_permutation_switch', @language.after_permutation_switch)
@@ -37,7 +37,7 @@ SNIPPET
         snippets << generate_short_circuiting_hook_script('before_script')
         snippets << generate_script_hook_script
         snippets << generate_after_success_and_failure_hook_script
-        snippets << generate_continuing_hook_script('after_script')
+        snippets << generate_continue_and_ignore_hook_script('after_script')
       end
       snippets << %{exit $test_runner_exit_status}
       return snippets.join("\n")
@@ -49,10 +49,10 @@ SNIPPET
       <<SNIPPET
 if [ $test_runner_exit_status -eq 0 ]; then
 :
-#{generate_continuing_hook_script('after_success')}
+#{generate_continue_and_ignore_hook_script('after_success')}
 else
 :
-#{generate_continuing_hook_script('after_failure')}
+#{generate_continue_and_ignore_hook_script('after_failure')}
 fi
 SNIPPET
     end
@@ -69,11 +69,11 @@ SNIPPET
       end
     end
 
-    def generate_continuing_hook_script(hook_name)
+    def generate_continue_and_ignore_hook_script(hook_name)
       if !Boxci.project_config.send(hook_name.to_sym).empty?
         snippets = []
         Boxci.project_config.send(hook_name.to_sym).each do |step|
-          snippets << continue_on_step_failure(hook_name, step)
+          snippets << continue_and_ignore_on_step_failure(hook_name, step)
         end
         return snippets.join("\n")
       else
@@ -121,8 +121,26 @@ step_exit_code=0
 #{step}
 step_exit_code=$?
 if [ $step_exit_code -ne 0 ]; then
-  echo "Warning: script step '#{step}' exited with non-zero exit code ($step_exit_code)."
+  echo "Warning: #{hook_name} step '#{step}' exited with non-zero exit code ($step_exit_code)."
   test_runner_exit_status=1
+fi
+# End of '#{hook_name}' step '#{step}'
+SNIPPET
+      else
+        %Q(# Placeholder where '#{hook_name}' would go if it was set.)
+      end
+    end
+
+    def continue_and_ignore_on_step_failure(hook_name, step)
+      if step && !step.empty?
+        <<SNIPPET
+# Beginning of '#{hook_name}' step '#{step}'
+echo "Running '#{hook_name}' step '#{step}'"
+step_exit_code=0
+#{step}
+step_exit_code=$?
+if [ $step_exit_code -ne 0 ]; then
+  echo "Warning: #{hook_name} step '#{step}' exited with non-zero exit code ($step_exit_code)."
 fi
 # End of '#{hook_name}' step '#{step}'
 SNIPPET

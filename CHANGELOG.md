@@ -6,6 +6,9 @@ versions as well as provide a rough history.
 
 #### Next Release
 
+- Made `after_success`, `after_failure`, and `after_script` no longer affect
+  the `boxci test` exit code.
+
 #### v0.0.30
 
 - Renamed project from `shanty` to `boxci`
