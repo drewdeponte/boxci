@@ -2,6 +2,7 @@
 
 [![Build Status](https://travis-ci.org/reachlocal/boxci.svg?branch=master)](https://travis-ci.org/reachlocal/boxci)
 [![Version](https://img.shields.io/gem/v/boxci.svg)](https://rubygems.org/gems/boxci)
+[![Code Climate](https://codeclimate.com/github/reachlocal/boxci.png)](https://codeclimate.com/github/reachlocal/boxci)
 
 Boxci makes creating a virtualized development & continuous integration
 environments as easy as possible.
