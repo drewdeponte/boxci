@@ -1,6 +1,5 @@
 language: ruby
 rvm:
-  - "1.8.7"
   - "1.9.2"
   - "1.9.3"
   - "2.0.0"
@@ -8,4 +7,3 @@ rvm:
   - "2.1.1"
 # uncomment this line if your project needs to run something other than `rake`:
 # script: bundle exec rspec spec
-env: CODECLIMATE_REPO_TOKEN=a4f929b0dfb49ad0d7cd6b7d89f80cfa1a6f71e3ae031f9697f771577408b9a7
