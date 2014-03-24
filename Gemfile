@@ -3,4 +3,7 @@ source 'https://rubygems.org'
 # Specify your gem's dependencies in shanty.gemspec
 gemspec
 
-gem "codeclimate-test-reporter", :group => :test, :require => nil
+group :test do
+  gem "codeclimate-test-reporter", :require => false
+  gem "json", :require => false
+end
