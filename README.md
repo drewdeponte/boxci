@@ -4,6 +4,7 @@
 [![Version](https://img.shields.io/gem/v/boxci.svg)](https://rubygems.org/gems/boxci)
 [![Code Climate](https://codeclimate.com/github/reachlocal/boxci.png)](https://codeclimate.com/github/reachlocal/boxci)
 [![Code Coverage](https://codeclimate.com/github/reachlocal/boxci/coverage.png)](https://codeclimate.com/github/reachlocal/boxci)
+[![Dependency Status](https://gemnasium.com/reachlocal/boxci.svg)](https://gemnasium.com/reachlocal/boxci)
 
 Boxci makes creating a virtualized development & continuous integration
 environments as easy as possible.
