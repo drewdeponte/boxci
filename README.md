@@ -3,6 +3,7 @@
 [![Build Status](https://travis-ci.org/reachlocal/boxci.svg?branch=master)](https://travis-ci.org/reachlocal/boxci)
 [![Version](https://img.shields.io/gem/v/boxci.svg)](https://rubygems.org/gems/boxci)
 [![Code Climate](https://img.shields.io/codeclimate/github/reachlocal/boxci.svg)](https://codeclimate.com/github/reachlocal/boxci)
+[![Code Coverage](http://img.shields.io/coveralls/reachlocal/boxic.svg)](https://coveralls.io/r/reachlocal/boxci)
 [![Dependency Status](https://gemnasium.com/reachlocal/boxci.svg)](https://gemnasium.com/reachlocal/boxci)
 
 Boxci makes creating a virtualized development & continuous integration
