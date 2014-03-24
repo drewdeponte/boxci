@@ -1,4 +1,7 @@
 require "bundler/gem_tasks"
+require "rspec/core/rake_task"
+
+RSpec::Core::RakeTask.new(:spec)
 
 # Add a simple console for debugging.
 #
@@ -11,3 +14,5 @@ task :console do
   ARGV.clear
   IRB.start
 end
+
+task :default => :spec
