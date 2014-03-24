@@ -5,5 +5,4 @@ gemspec
 
 group :test do
   gem "codeclimate-test-reporter", :require => false
-  gem "json", :require => false
 end
