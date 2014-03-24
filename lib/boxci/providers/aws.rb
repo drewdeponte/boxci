@@ -2,8 +2,8 @@ module Boxci
   module Providers
     class Aws < ::Boxci::Provider
       PLUGIN = {
-        name: "vagrant-aws",
-        dummy_box_url: "https://github.com/mitchellh/vagrant-aws/raw/master/dummy.box"
+        :name => "vagrant-aws",
+        :dummy_box_url => "https://github.com/mitchellh/vagrant-aws/raw/master/dummy.box"
       }
 
       no_commands do

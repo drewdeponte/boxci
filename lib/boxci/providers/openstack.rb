@@ -2,8 +2,8 @@ module Boxci
   module Providers
     class Openstack < ::Boxci::Provider
       PLUGIN = {
-        name: "vagrant-openstack-plugin",
-        dummy_box_url: "https://github.com/cloudbau/vagrant-openstack-plugin/raw/master/dummy.box"
+        :name => "vagrant-openstack-plugin",
+        :dummy_box_url => "https://github.com/cloudbau/vagrant-openstack-plugin/raw/master/dummy.box"
       }
 
       no_commands do
