@@ -1,5 +1,7 @@
 # boxci: standardizing virtual development & ci environments
 
+[![Build Status](https://travis-ci.org/reachlocal/boxci.svg?branch=master)](https://travis-ci.org/reachlocal/boxci)
+
 Boxci makes creating a virtualized development & continuous integration
 environments as easy as possible.
 
