@@ -7,10 +7,6 @@ module Boxci
     include Thor::Base
     include Thor::Actions
 
-    def self.exit_on_failure?
-      true
-    end
-
     source_root(File.dirname(__FILE__))
 
     def test(options)
@@ -57,42 +53,37 @@ module Boxci
       # verify.
       Signal.trap('SIGPIPE', 'SIG_IGN')
 
-      @tester_exit_code = 0
-      # depencency_checker = Boxci::DependencyChecker.new
-      # depencency_checker.verify_all
-      initial_config(options)
+      begin
+        @tester_exit_code = 0
+        # depencency_checker = Boxci::DependencyChecker.new
+        # depencency_checker.verify_all
+        initial_config(options)
 
-      create_project_folder
-      create_project_archive
-      write_vagrant_file
-      write_test_runner
-      if @provider_object.requires_plugin?
-        install_vagrant_plugin
-        add_provider_box
+        create_project_folder
+        create_project_archive
+        write_vagrant_file
+        write_test_runner
+        if @provider_object.requires_plugin?
+          install_vagrant_plugin
+          add_provider_box
+        end
+        spin_up_box
+        setup_ssh_config
+        install_puppet_on_box
+        provision_box
+        create_artifact_directory
+        upload_test_runner
+        run_tests
+        download_artifacts
+        say "Finished!", :green
+      rescue Errno::EPIPE => e
+        File.open('/tmp/boxci.log', 'a+') do |f|
+          f.write("test() method swallowed Errno::EPIPE exception\n")
+        end
+      ensure
+        cleanup
       end
-      spin_up_box
-      setup_ssh_config
-      install_puppet_on_box
-      provision_box
-      create_artifact_directory
-      upload_test_runner
-      run_tests
-      download_artifacts
-      say "Finished!", :green
-    rescue Errno::EPIPE => e
-      File.open('/tmp/boxci.log', 'a+') do |f|
-        f.write("test() method swallowed Errno::EPIPE exception\n")
-      end
-    rescue => e
-      File.open('/tmp/boxci.log', 'a+') do |f|
-        f.write("test() method caught exception")
-        f.write("#{e.class}\n")
-        f.write("#{e.message}\n")
-        f.write("#{e.backtrace.join("\n")}\n")
-      end
-      raise e
-    ensure
-      cleanup
+
       exit @tester_exit_code
     end
 

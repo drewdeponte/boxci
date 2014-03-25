@@ -6,6 +6,8 @@ versions as well as provide a rough history.
 
 #### Next Release
 
+- Fix issue #30 where exceptions were being swallowed and forcing an exit
+  status 0 instead of displaying the exception and exiting non-zero.
 - Added exporting of `BOXCI_TEST_RESULT` with the value being the exit code of
   the bulid. This allows it to be inspected in the `after_failure`,
   `after_success`, or `after_script` commands.
