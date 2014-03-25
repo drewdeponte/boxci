@@ -6,6 +6,9 @@ versions as well as provide a rough history.
 
 #### Next Release
 
+- Fix issue #31 so that it auto installs vagrant plugins without prompting the
+  user. This will allow it to work in non-interactive environments like other
+  CI systems (Bamboo, etc.)
 - Fix issue #30 where exceptions were being swallowed and forcing an exit
   status 0 instead of displaying the exception and exiting non-zero.
 - Added exporting of `BOXCI_TEST_RESULT` with the value being the exit code of

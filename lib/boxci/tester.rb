@@ -140,10 +140,7 @@ module Boxci
         if !system("vagrant plugin list | grep -q #{plugin}")
           # if vagrant plugin is missing
           say "You are missing the Vagrant plugin for #{provider}", :yellow
-          # ask user if it's ok to install for them
-          if yes?("Would you like to install it now?")
-            run "vagrant plugin install #{plugin}", :verbose => verbose?
-          end
+          run "vagrant plugin install #{plugin}", :verbose => verbose?
         else # if vagrant plugin is found
           say "Provider plugin #{plugin} found", :green
         end
