@@ -6,6 +6,8 @@ versions as well as provide a rough history.
 
 #### Next Release
 
+- It should now add dummy boxes for various providers.
+
 #### v0.0.31
 
 - Fix issue #31 so that it auto installs vagrant plugins without prompting the

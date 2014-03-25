@@ -150,12 +150,6 @@ module Boxci
     def add_provider_box
       dummy_box_url = @provider_object.dummy_box_url
       if dummy_box_url
-        if run "curl --output /dev/null --silent --head --fail #{dummy_box_url}"
-          say "Using specified VM Box URL", :green
-        else
-          say "Could not resolve the Box URL: #{dummy_box_url}", :red
-        end
-      else
         inside @project_workspace_folder do
           # check for box
           if !system("vagrant box list | grep dummy | grep -q \"(#{provider})\"")
