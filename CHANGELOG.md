@@ -6,6 +6,8 @@ versions as well as provide a rough history.
 
 #### Next Release
 
+#### v0.0.31
+
 - Fix issue #31 so that it auto installs vagrant plugins without prompting the
   user. This will allow it to work in non-interactive environments like other
   CI systems (Bamboo, etc.)
