@@ -6,6 +6,8 @@ versions as well as provide a rough history.
 
 #### Next Release
 
+#### v0.0.32
+
 - It should now add dummy boxes for various providers.
 
 #### v0.0.31
