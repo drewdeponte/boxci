@@ -6,6 +6,9 @@ versions as well as provide a rough history.
 
 #### Next Release
 
+- Rename OpenStack hostnames to include boxci prefix instead of shanty prefix
+  [\#33](https://github.com/reachlocal/boxci/issues/33)
+
 #### v0.0.32
 
 - It should now add dummy boxes for various providers.
