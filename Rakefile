@@ -10,7 +10,7 @@ RSpec::Core::RakeTask.new(:spec)
 task :console do
   require 'irb'
   require 'irb/completion'
-  require 'shanty'
+  require 'boxci'
   ARGV.clear
   IRB.start
 end
