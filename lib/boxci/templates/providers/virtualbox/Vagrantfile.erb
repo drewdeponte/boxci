@@ -33,7 +33,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       <% @project_config.puppet_facts.each do |k, v| %>
         "<%= k %>" => "<%= v %>",
       <% end %>
-      "role" => "shanty",
+      "role" => "boxci",
       "vagrant_user" => "<%= @provider_config.fetch("vagrant_user") %>",
       "vagrant_home" => "<%= @provider_config.fetch("vagrant_home") %>"
     }
