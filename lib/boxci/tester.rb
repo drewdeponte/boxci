@@ -67,8 +67,14 @@ module Boxci
           install_vagrant_plugin
           add_provider_box
         end
-        spin_up_box
-        setup_ssh_config
+        if !spin_up_box
+          say "ERROR: Failed to spin up box", :red
+          exit 1
+        end
+        if !setup_ssh_config
+          say "ERROR: Failed to setup ssh config", :red
+          exit 1
+        end
         install_puppet_on_box
         provision_box
         create_artifact_directory
