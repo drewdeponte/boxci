@@ -6,6 +6,10 @@ versions as well as provide a rough history.
 
 #### Next Release
 
+#### v0.0.36
+
+- Fixed command success detection so it actually works properly.
+
 #### v0.0.35
 
 - Added command success detection and debugging in hopes to better identify
