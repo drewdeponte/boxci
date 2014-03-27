@@ -6,6 +6,11 @@ versions as well as provide a rough history.
 
 #### Next Release
 
+#### v0.0.35
+
+- Added command success detection and debugging in hopes to better identify
+  what is happening in external systems such as Bamboo.
+
 #### v0.0.34
 
 - Disable cleanup for testing purposes, will have to do manual cleanup until
