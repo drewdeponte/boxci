@@ -26,7 +26,7 @@ module Boxci
         File.open('/tmp/boxci.log', 'a+') { |f| f.write("Got SIGTERM, going to cleanup...\n") }
 
         begin
-          cleanup
+          # cleanup
         rescue Errno::EPIPE => e
           File.open('/tmp/boxci.log', 'a+') { |f| f.write("SIGTERM handler swallowed Errno::EPIPE exception\n") }
         rescue => e
@@ -44,7 +44,7 @@ module Boxci
       end
 
       Signal.trap('SIGINT') do
-        cleanup
+        # cleanup
         exit 255
       end
 
@@ -81,7 +81,7 @@ module Boxci
           f.write("test() method swallowed Errno::EPIPE exception\n")
         end
       ensure
-        cleanup
+        # cleanup
       end
 
       exit @tester_exit_code

@@ -6,6 +6,9 @@ versions as well as provide a rough history.
 
 #### Next Release
 
+- Disable cleanup for testing purposes, will have to do manual cleanup until
+  it is re-enabled.
+
 #### v0.0.33
 
 - Add `VAGRANT_LOG=debug` to `vagrant up` and `vagrant ssh-config` commands to
