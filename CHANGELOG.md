@@ -6,6 +6,8 @@ versions as well as provide a rough history.
 
 #### Next Release
 
+#### v0.0.33
+
 - Add `VAGRANT_LOG=debug` to `vagrant up` and `vagrant ssh-config` commands to
   assist with identifying issues. This is only the case if the verbose switch
   is set.
