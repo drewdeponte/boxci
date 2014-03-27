@@ -6,6 +6,9 @@ versions as well as provide a rough history.
 
 #### Next Release
 
+- Add `VAGRANT_LOG=debug` to `vagrant up` and `vagrant ssh-config` commands to
+  assist with identifying issues. This is only the case if the verbose switch
+  is set.
 - Rename OpenStack hostnames to include boxci prefix instead of shanty prefix
   [\#33](https://github.com/reachlocal/boxci/issues/33)
 

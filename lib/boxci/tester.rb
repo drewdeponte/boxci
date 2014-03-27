@@ -165,13 +165,21 @@ module Boxci
 
     def spin_up_box
       inside @project_workspace_folder do
-        run "vagrant up --no-provision --provider #{provider}", :verbose => verbose?
+        if verbose?
+          run "VAGRANT_LOG=debug vagrant up --no-provision --provider #{provider}", :verbose => verbose?
+        else
+          run "vagrant up --no-provision --provider #{provider}"
+        end
       end
     end
 
     def setup_ssh_config
       inside @project_workspace_folder do
-        run "vagrant ssh-config > ssh-config.local", :verbose => verbose?
+        if verbose?
+          run "VAGRANT_LOG=debug vagrant ssh-config > ssh-config.local", :verbose => verbose?
+        else
+          run "vagrant ssh-config > ssh-config.local"
+        end
       end
     end
 
