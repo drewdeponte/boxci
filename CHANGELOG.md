@@ -6,6 +6,12 @@ versions as well as provide a rough history.
 
 #### Next Release
 
+#### v0.0.37
+
+- Re-enable cleanup
+- Modified command success detection to rasie Boxci::CommandFailed error on
+  failure so that it triggers cleanup and short-circuit.
+
 #### v0.0.36
 
 - Fixed command success detection so it actually works properly.
