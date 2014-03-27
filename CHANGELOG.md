@@ -6,6 +6,8 @@ versions as well as provide a rough history.
 
 #### Next Release
 
+#### v0.0.34
+
 - Disable cleanup for testing purposes, will have to do manual cleanup until
   it is re-enabled.
 
