@@ -23,6 +23,7 @@ require 'boxci/test_runner'
 module Boxci
   class MissingDependency < StandardError; end
   class PureVirtualMethod < StandardError; end
+  class CommandFailed < StandardError; end
 
   def self.project_config
     if @project_config

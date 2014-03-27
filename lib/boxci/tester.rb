@@ -26,7 +26,7 @@ module Boxci
         File.open('/tmp/boxci.log', 'a+') { |f| f.write("Got SIGTERM, going to cleanup...\n") }
 
         begin
-          # cleanup
+          cleanup
         rescue Errno::EPIPE => e
           File.open('/tmp/boxci.log', 'a+') { |f| f.write("SIGTERM handler swallowed Errno::EPIPE exception\n") }
         rescue => e
@@ -44,7 +44,7 @@ module Boxci
       end
 
       Signal.trap('SIGINT') do
-        # cleanup
+        cleanup
         exit 255
       end
 
@@ -67,14 +67,8 @@ module Boxci
           install_vagrant_plugin
           add_provider_box
         end
-        if !spin_up_box
-          say "ERROR: Failed to spin up box", :red
-          exit 1
-        end
-        if !setup_ssh_config
-          say "ERROR: Failed to setup ssh config", :red
-          exit 1
-        end
+        spin_up_box
+        setup_ssh_config
         install_puppet_on_box
         provision_box
         create_artifact_directory
@@ -87,7 +81,7 @@ module Boxci
           f.write("test() method swallowed Errno::EPIPE exception\n")
         end
       ensure
-        # cleanup
+        cleanup
       end
 
       exit @tester_exit_code
@@ -172,9 +166,13 @@ module Boxci
     def spin_up_box
       inside @project_workspace_folder do
         if verbose?
-          return run "vagrant up --no-provision --provider #{provider}", :verbose => verbose?
+          if !run "vagrant up --no-provision --provider #{provider}", :verbose => verbose?
+            raise Boxci::CommandFailed, "Failed to successfully run vagrant up --no-provision --provider #{provider}"
+          end
         else
-          return run "vagrant up --no-provision --provider #{provider}"
+          if !run "vagrant up --no-provision --provider #{provider}"
+            raise Boxci::CommandFailed, "Failed to successfully run vagrant up --no-provision --provider #{provider}"
+          end
         end
       end
     end
@@ -182,9 +180,13 @@ module Boxci
     def setup_ssh_config
       inside @project_workspace_folder do
         if verbose?
-          return run "vagrant ssh-config > ssh-config.local", :verbose => verbose?
+          if !run "vagrant ssh-config > ssh-config.local", :verbose => verbose?
+            raise Boxci::CommandFailed, "Failed to successfully run vagrant ssh-config > ssh-config.local"
+          end
         else
-          return run "vagrant ssh-config > ssh-config.local"
+          if !run "vagrant ssh-config > ssh-config.local"
+            raise Boxci::CommandFailed, "Failed to successfully run vagrant ssh-config > ssh-config.local"
+          end
         end
       end
     end
