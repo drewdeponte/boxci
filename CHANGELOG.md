@@ -6,6 +6,9 @@ versions as well as provide a rough history.
 
 #### Next Release
 
+- Fix issue with generating `.boxci.yml` incorrectly when no ruby version is
+  found.
+
 #### v0.0.37
 
 - Re-enable cleanup

@@ -3,7 +3,7 @@ language: <%= @language -%>
 rbenv:
 <% if @current_ruby_version -%>
   - "<%= @current_ruby_version -%>"
-<% else %>
+<% else -%>
   - "2.1.0"
 <% end -%>
 # uncomment this line if your project needs to run something other than `rake`:
