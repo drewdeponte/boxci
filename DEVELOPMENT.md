@@ -16,7 +16,7 @@ help.
 
 If you have any questions after reading this page, please feel free to contact
 either [@cyphactor](http://github.com/cyphactor) or
-[@hone](http://github.com/brimil01). They are both happy to provide help
+[@BRIMIL01](http://github.com/brimil01). They are both happy to provide help
 working through your first bugfix or thinking through the problem you’re
 trying to resolve.
 
