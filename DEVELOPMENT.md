@@ -23,7 +23,7 @@ trying to resolve.
 ## Tackle some small problems
 
 We track [small
-bugs](https://github.com/reachlocal/boxci/issues?labels=small&state=open) so
+bugs](https://github.com/reachlocal/boxci/issues?state=open) so
 that anyone who wants to help can start with something that's not too
 overwhelming. If nothing on those lists looks good, though, just talk to us.
 
