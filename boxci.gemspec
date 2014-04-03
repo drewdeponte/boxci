@@ -7,7 +7,7 @@ Gem::Specification.new do |spec|
   spec.name          = "boxci"
   spec.version       = Boxci::VERSION
   spec.authors       = ["Andrew De Ponte", "Brian Miller", "Russell Cloak"]
-  spec.email         = ["cyphactor@gmail.com", "brimil01@gmail.com", "russcloak@gmail.cm"]
+  spec.email         = ["cyphactor@gmail.com", "brimil01@gmail.com", "russcloak@gmail.com"]
   spec.summary       = %q{Tool simplifying Vagrant based development & continuous integration environments.}
   spec.description   = %q{Boxci is focused on defining standards and building tooling around using Vagrant for development & continuous integration environments to make using them as easy as possible.}
   spec.homepage      = "http://boxci.io"
