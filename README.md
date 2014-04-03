@@ -26,6 +26,8 @@ Install it by running the following:
     boxci build
     boxci test
 
+## Documentation
+
 See [boxci.io](http://boxci.io) for the full documentation.
 
 ## Troubleshooting
