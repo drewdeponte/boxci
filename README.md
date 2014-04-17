@@ -14,7 +14,7 @@ It does this by implementing standards around the use of
 continuous integration environment. This means that it helps you configure and
 setup [Vagrant](http://www.vagrantup.com/), generate a well structured initial
 puppet manifest, and handles spinning up your puppet managed continuous
-integration environment up in the cloud and running your automated test
+integration environment in the cloud and running your automated test
 suites.
 
 ## Installation and usage
