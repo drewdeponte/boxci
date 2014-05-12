@@ -19,7 +19,7 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   spec.add_runtime_dependency "thor", "~> 0.18"
-  spec.add_runtime_dependency "net-ssh", "~> 2.7"
+  spec.add_runtime_dependency "net-ssh", "~> 2.9"
   spec.add_runtime_dependency "net-scp", "~> 1.2"
 
   spec.add_development_dependency "bundler", "~> 1.6"
