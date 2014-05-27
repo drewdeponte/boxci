@@ -4,7 +4,7 @@ require 'boxci/languages'
 
 describe Boxci::LanguageFactory do
   describe ".build" do
-    it "gets the constant for the ruby language class" do
+    it "raises an exception when asked for a non-existent class" do
       expect{ subject.build('foo') }.to raise_error(NameError)
     end
 

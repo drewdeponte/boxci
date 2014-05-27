@@ -9,7 +9,6 @@ require 'boxci/tester'
 require 'boxci/language_factory'
 require 'boxci/language'
 require 'boxci/languages'
-# TODO: WRITE A WAY TO DYNAMICALLY LOAD LANGUAGES
 require 'boxci/languages/ruby'
 require 'boxci/provider_factory'
 require 'boxci/provider'
