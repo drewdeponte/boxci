@@ -10,7 +10,7 @@ describe Boxci::Languages do
   describe ".add" do
     it "adds a language to its internal storage" do
       subject.add(Boxci::Languages::Ruby)
-      expect(Boxci::Languages.langs).to have_key('ruby')
+      expect(Boxci::Languages.languages).to have_key('ruby')
     end
   end
 

@@ -10,7 +10,7 @@ describe Boxci::LanguageFactory do
 
     it "gets an instance of the ruby language class" do
       Boxci::Languages.add(Boxci::Languages::Ruby)
-      expect(subject.build('ruby').class.to_s).to eq "Boxci::Languages::Ruby"
+      expect(subject.build('ruby')).to be_a(Boxci::Languages::Ruby)
     end
 
     it "constructs a new instance of the language const it previously grabbed" do

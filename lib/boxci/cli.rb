@@ -20,7 +20,7 @@ module Boxci
       default provider (#{Boxci.default_provider}). If you don't have a
       default provider configured it will default to '#{DEFAULT_PROVIDER}'.
 
-      Supported Languages: #{Boxci::Language.supported_languages.join(", ")}
+      Supported Languages: #{Boxci.supported_languages.join(", ")}
       \005Supported Providers: #{Boxci::Provider.supported_providers.join(", ")}
     LONGDESC
     option :provider, :type => :string, :aliases => "-p", :default => Boxci.default_provider

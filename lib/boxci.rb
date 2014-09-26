@@ -63,6 +63,11 @@ module Boxci
       return ::Boxci::CLI::DEFAULT_PROVIDER
     end
   end
+  
+  def self.supported_languages
+    Boxci::Languages.languages.keys
+  end
+
 
   def self.project_path
     @project_path ||= File.expand_path(%x(pwd)).strip

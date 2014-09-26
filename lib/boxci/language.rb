@@ -7,16 +7,6 @@ module Boxci
         File.dirname(__FILE__)
       end
 
-      # 
-      # Keeps track of supported languages in the Boxci::Languages module
-      #
-      def self.supported_languages
-        Boxci::Languages.langs.keys
-      end
-
-      # 
-      # When this class is inherited, the subclass is added to our Languages
-      #
       def self.inherited(subclass)
         Boxci::Languages.add(subclass)
       end
