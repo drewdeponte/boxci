@@ -15,7 +15,7 @@ Vagrant.configure("2") do |config|
     os.endpoint = "<%= @provider_config.fetch('endpoint') -%>"
     os.keypair_name = "<%= @provider_config.fetch("key_pair") %>"
     os.metadata = {}
-    os.network = "<%= @provider_config.fetch('network') -%>"
+    os.networks = ["<%= @provider_config.fetch('network') -%>"]
   end
 
   config.vm.provision :puppet do |puppet|
