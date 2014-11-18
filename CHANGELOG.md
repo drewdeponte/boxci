@@ -6,6 +6,8 @@ versions as well as provide a rough history.
 
 #### Next Release
 
+#### v0.0.39
+
 - Include the .git directory in the project tar so gem specs can find the 
   dependency gems.
 
