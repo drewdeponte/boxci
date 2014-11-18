@@ -6,6 +6,9 @@ versions as well as provide a rough history.
 
 #### Next Release
 
+- Include the .git directory in the project tar so gem specs can find the 
+  dependency gems.
+
 #### v0.0.38
 
 - Fix issue with generating `.boxci.yml` incorrectly when no ruby version is
