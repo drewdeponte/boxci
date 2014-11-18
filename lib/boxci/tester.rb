@@ -114,7 +114,7 @@ module Boxci
       inside Boxci.project_path do
         run "git checkout #{@options["revision"]}", :verbose => verbose?
         run "git submodule update --init", :verbose => verbose?
-        run "tar cf #{File.join(@project_workspace_folder, "project.tar")} --exclude .git --exclude \"*.log\" --exclude node_modules .", :verbose => verbose?
+        run "tar cf #{File.join(@project_workspace_folder, "project.tar")} --exclude \"*.log\" --exclude node_modules .", :verbose => verbose?
       end
     end
 
