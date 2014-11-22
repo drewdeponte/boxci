@@ -5,7 +5,7 @@ module Boxci
         <<SCRIPT
 echo "Switching to ruby #{@val}"
 rbenv local #{@val}
-echo "Swithed to ruby `ruby --version`"
+echo "Switched to ruby `ruby --version`"
 SCRIPT
       end
     end
