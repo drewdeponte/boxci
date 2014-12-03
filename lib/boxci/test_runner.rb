@@ -2,6 +2,7 @@ module Boxci
   class TestRunner
     def initialize(language)
       @language = language
+      @project_config = Boxci.project_config
     end
     
     def generate_script
@@ -9,8 +10,8 @@ module Boxci
       snippets << %q{#!/bin/bash --login}
       snippets << %q{BOXCI_TEST_RESULT=0}
       snippets << <<SNIPPET
-PROJECT_DIR="/vagrant/project"
-mkdir $PROJECT_DIR
+PROJECT_DIR="#{@project_config.project_directory}"
+mkdir -p $PROJECT_DIR
 tar -xf /vagrant/project.tar -C $PROJECT_DIR
 cd $PROJECT_DIR 
 SNIPPET

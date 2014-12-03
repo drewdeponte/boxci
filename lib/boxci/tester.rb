@@ -214,16 +214,17 @@ module Boxci
     def create_artifact_directory
       say "Creating the artifact directory on the box...", :blue if verbose?
       Net::SSH.start("default", nil, {:config => File.join(@project_workspace_folder, "ssh-config.local")}) do |ssh|
-        ssh.exec!  "mkdir -p #{@project_config.artifact_path}"
+        ssh.exec! "mkdir -p #{@project_config.artifact_path}"
       end
     end
 
     def upload_test_runner
       Net::SSH.start("default", nil, {:config => File.join(@project_workspace_folder, "ssh-config.local")}) do |ssh|
         say "Uploading test_runner.sh to the box...", :blue if verbose?
-        ssh.scp.upload! File.join(@project_workspace_folder, "test_runner.sh"), "/vagrant/test_runner.sh"
-        say "Running: chmod a+x /vagrant/test_runner.sh", :blue if verbose?
-        puts ssh.exec! "chmod a+x /vagrant/test_runner.sh"
+        remote_file_location = File.join(@project_config.base_directory, "test_runner.sh")
+        ssh.scp.upload! File.join(@project_workspace_folder, "test_runner.sh"), remote_file_location
+        say "Running: chmod a+x #{remote_file_location}", :blue if verbose?
+        puts ssh.exec! "chmod a+x #{remote_file_location}"
       end
     end
 
@@ -246,7 +247,7 @@ module Boxci
             @tester_exit_code = exit_code
           end
 
-          channel.exec "/vagrant/test_runner.sh"
+          channel.exec File.join(@project_config.base_directory, "test_runner.sh")
         end
         session.loop
       end
@@ -255,8 +256,9 @@ module Boxci
     def download_artifacts
       Net::SSH.start("default", nil, {:config => File.join(@project_workspace_folder, "ssh-config.local")}) do |ssh|
         say "Downloading the reports...", :blue if verbose?
-        puts ssh.exec! "cd #{@project_config.artifact_path} && tar cf /tmp/boxci_artifacts.tar ."
-        ssh.scp.download! "/tmp/boxci_artifacts.tar", '.'
+        artifact_file = File.join(@project_config.base_directory, 'boxci_artifacts.tar')
+        puts ssh.exec! "cd #{@project_config.artifact_path} && tar cf #{artifact_file} ."
+        ssh.scp.download! artifact_file, '.'
       end
     end
 

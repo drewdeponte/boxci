@@ -81,6 +81,23 @@ describe Boxci::ProjectConfig do
     end
   end
 
+  describe "#project_directory" do
+    it "returns the project directory" do
+      project_folder = "project"
+      base_directory = "/base"
+      subject.instance_variable_set(:@project_config, { "base_directory" => base_directory, "project_folder" => project_folder })
+      expect(subject.project_directory).to eq("/base/project")
+    end
+  end
+
+  describe "#base_directory" do
+    it "returns the base directory" do
+      base_directory_double = double('base directory double')
+      subject.instance_variable_set(:@project_config, { "base_directory" => base_directory_double })
+      expect(subject.base_directory).to eq(base_directory_double)
+    end
+  end
+
   describe "#before_install" do
     context "when before_install is provided in the project config" do
       it "grabs the named hook as an array" do
