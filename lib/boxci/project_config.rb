@@ -18,6 +18,10 @@ module Boxci
       @project_config['rbenv']
     end
 
+    def jvm
+      @project_config['jvm']
+    end
+
     def language
       @project_config['language']
     end
@@ -87,6 +91,15 @@ module Boxci
         perms = []
         rbenv.each do |ver|
           perms << Boxci::ConfigPermutation.new([Boxci::ConfigPermutationComponentFactory.build('rbenv', ver)])
+        end
+        return perms
+      end
+      if jvm.nil? || jvm.empty?
+        return nil
+      else
+        perms = []
+        jvm.each do |ver|
+          perms << Boxci::ConfigPermutation.new([Boxci::ConfigPermutationComponentFactory.build('jvm', ver)])
         end
         return perms
       end

@@ -9,3 +9,10 @@ rbenv:
 # uncomment this line if your project needs to run something other than `rake`:
 # script: bundle exec rspec spec
 <% end -%>
+<% if @language == 'java' %>
+jvm:
+  - "7"
+# uncomment this line if your project needs to run something other than `mvn test`:
+# script: 
+# - "./grailsw test-run"
+<% end -%>
