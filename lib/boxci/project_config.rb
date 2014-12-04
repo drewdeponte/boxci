@@ -1,7 +1,13 @@
 module Boxci
   class ProjectConfig
     def initialize
-      @project_config = { 'language' => 'ruby', 'box_size' => 'small', 'artifact_path' => '/tmp/boxci/artifacts' }
+      @project_config = { 
+        'language' => 'ruby', 
+        'box_size' => 'small',
+        'artifact_path' => '/tmp/boxci/artifacts',
+        'project_folder' => 'project',
+        'base_directory' => '/tmp/boxci'
+      }
     end
 
     def load
@@ -27,6 +33,14 @@ module Boxci
 
     def artifact_path
       @project_config['artifact_path']
+    end
+
+    def base_directory
+      @project_config['base_directory']
+    end
+
+    def project_directory
+      @project_directory ||= File.join(@project_config['base_directory'], @project_config['project_folder'])
     end
 
     # Test Runner Hooks
@@ -87,7 +101,7 @@ module Boxci
         [@project_config[key]]
       end
     end
-    
+
     def read_project_config_hash
       project_config_path = File.join(Boxci.project_path, ".boxci.yml")
       return YAML::load_file(project_config_path)
