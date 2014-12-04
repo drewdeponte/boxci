@@ -19,7 +19,7 @@ module Boxci
           @project_config = Boxci.project_config
           if @project_config.rbenv
             inside Boxci.project_path do
-              run "git submodule add -f git@github.com:alup/puppet-rbenv.git puppet/modules/rbenv"
+              run "git submodule add -f https://github.com/alup/puppet-rbenv.git puppet/modules/rbenv"
               run "git submodule update --init"
             end
           end
