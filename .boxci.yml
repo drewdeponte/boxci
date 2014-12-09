@@ -1,0 +1,8 @@
+language: ruby
+rbenv:
+  - "2.1.5"
+script:
+  - bundle exec rspec --require ci/reporter/rake/rspec_loader --format CI::Reporter::RSpec3::Formatter spec
+after_script:
+  - mv spec/reports/*.xml reports/
+artifact_path: "/vagrant/project/reports"

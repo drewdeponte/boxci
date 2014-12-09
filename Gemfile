@@ -5,4 +5,5 @@ gemspec
 
 group :test do
   gem 'coveralls', :require => false
+  gem 'ci_reporter_rspec', '~> 1.0'
 end
