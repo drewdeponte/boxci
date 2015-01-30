@@ -195,11 +195,11 @@ module Boxci
       say "Opening SSH tunnel into the box...", :blue if verbose?
       Net::SSH.start("default", nil, {:config => File.join(@project_workspace_folder, "ssh-config.local")}) do |ssh|
         puppet = ssh.exec! "which puppet"
-        unless puppet
-          say "Running: sudo apt-get --yes update", :blue if verbose?
-          ssh.exec! "sudo apt-get --yes update"
-          say "Running: sudo apt-get --yes install puppet", :blue if verbose?
-          ssh.exec! "sudo apt-get --yes install puppet"
+        if puppet
+          puppet_version = ssh.exec! "puppet --version"
+          get_and_install_puppet_on_box(ssh) if puppet_version.to_f < 3
+        else
+          get_and_install_puppet_on_box(ssh)
         end
       end
     end
@@ -282,6 +282,21 @@ module Boxci
         `rm -rf #{@project_workspace_folder} >> /tmp/boxci.log 2>&1`
         # remove_dir @project_workspace_folder, :verbose => verbose?, :capture => true
       end
+    end
+
+    private
+
+    def get_and_install_puppet_on_box(ssh)
+      say "Dowloading latest puppet", :blue if verbose?
+      ssh.exec! "sudo rm /etc/apt/sources.list.d/puppetlabs.list"
+      ssh.exec! "sudo wget -O /tmp/puppetlabs-release-precise.deb http://apt.puppetlabs.com/puppetlabs-release-precise.deb"
+      ssh.exec! "sudo dpkg -i /tmp/puppetlabs-release-precise.deb"
+      say "Running: sudo apt-get --yes update", :blue if verbose?
+      ssh.exec! "sudo apt-get --yes update"
+      say "Running: sudo apt-get --yes install puppet", :blue if verbose?
+      ssh.exec! "sudo apt-get --yes install puppet"
+      puppet_version = ssh.exec! "puppet --version"
+      say "Running puppet version #{puppet_version}", :blue if verbose?
     end
   end
 end
