@@ -1,7 +1,7 @@
 module Boxci
   module LanguageFactory
     def self.build(language)
-      Boxci::Languages.const_get(language.capitalize).new
+      Boxci::Languages::language(language).new
     end
   end
 end

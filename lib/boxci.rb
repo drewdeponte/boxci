@@ -8,6 +8,7 @@ require 'boxci/dependency_checker'
 require 'boxci/tester'
 require 'boxci/language_factory'
 require 'boxci/language'
+require 'boxci/languages'
 require 'boxci/languages/ruby'
 require 'boxci/provider_factory'
 require 'boxci/provider'
@@ -62,6 +63,11 @@ module Boxci
       return ::Boxci::CLI::DEFAULT_PROVIDER
     end
   end
+  
+  def self.supported_languages
+    Boxci::Languages.languages.keys
+  end
+
 
   def self.project_path
     @project_path ||= File.expand_path(%x(pwd)).strip

@@ -7,12 +7,8 @@ module Boxci
         File.dirname(__FILE__)
       end
 
-      def self.supported_languages
-        @@supported_languages ||= []
-      end
-
       def self.inherited(subclass)
-        self.supported_languages << subclass.to_s.split('::').last.downcase
+        Boxci::Languages.add(subclass)
       end
 
       def before_permutation_switch
